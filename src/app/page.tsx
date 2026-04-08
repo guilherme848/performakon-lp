@@ -163,12 +163,12 @@ export default function Home() {
           </motion.div>
         </div>
 
-        {/* Floating marketplace notifications - positioned on the left side, below text */}
+        {/* Floating marketplace notifications - right side, below faces */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.8, duration: 0.6 }}
-          className="pointer-events-none absolute bottom-[18%] left-[6%] hidden lg:block"
+          className="pointer-events-none absolute bottom-[22%] right-[3%] hidden lg:block"
         >
           <motion.div
             animate={{ y: [0, -6, 0] }}
@@ -176,7 +176,7 @@ export default function Home() {
             className="rounded-xl border border-white/10 bg-brand-dark/80 px-4 py-3 shadow-2xl backdrop-blur-sm"
           >
             <div className="flex items-center gap-3">
-              <img src="https://http2.mlstatic.com/frontend-assets/ml-web-navigation/ui-navigation/6.6.73/mercadolibre/logo_large_25years@2x.png" alt="Mercado Livre" className="h-8 w-8 rounded-lg object-contain" />
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white"><svg viewBox="0 0 40 40" className="h-7 w-7"><circle cx="20" cy="20" r="20" fill="#FFE600"/><path d="M12 22c0 0 4-6 8-6s8 6 8 6" stroke="#2D3277" strokeWidth="2.5" fill="none" strokeLinecap="round"/><path d="M14 20c0 0 3-4 6-4s6 4 6 4" stroke="#2D3277" strokeWidth="2" fill="none" strokeLinecap="round"/></svg></div>
               <div>
                 <p className="text-xs font-semibold text-brand-white">Você vendeu!</p>
                 <p className="text-[11px] text-brand-white/50">Kit Chuveiro Lorenzetti · R$189,90</p>
@@ -186,10 +186,10 @@ export default function Home() {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.2, duration: 0.6 }}
-          className="pointer-events-none absolute bottom-[10%] left-[25%] hidden lg:block"
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 1.3, duration: 0.6 }}
+          className="pointer-events-none absolute bottom-[12%] right-[10%] hidden lg:block"
         >
           <motion.div
             animate={{ y: [0, -5, 0] }}
@@ -197,7 +197,7 @@ export default function Home() {
             className="rounded-xl border border-white/10 bg-brand-dark/80 px-4 py-3 shadow-2xl backdrop-blur-sm"
           >
             <div className="flex items-center gap-3">
-              <img src="https://cf.shopee.com.br/file/br-50009109-7a97ef55e3f4e8c2b1e39ed154a77810_xhdpi" alt="Shopee" className="h-8 w-8 rounded-lg object-contain" />
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white"><svg viewBox="0 0 40 40" className="h-7 w-7"><rect width="40" height="40" rx="8" fill="#EE4D2D"/><text x="20" y="28" textAnchor="middle" fill="white" fontSize="20" fontWeight="bold" fontFamily="Arial">S</text></svg></div>
               <div>
                 <p className="text-xs font-semibold text-brand-white">Novo pedido Shopee</p>
                 <p className="text-[11px] text-brand-white/50">Furadeira Bosch 12V · R$347,00</p>
@@ -207,10 +207,10 @@ export default function Home() {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.6, duration: 0.6 }}
-          className="pointer-events-none absolute bottom-[4%] left-[12%] hidden lg:block"
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 1.8, duration: 0.6 }}
+          className="pointer-events-none absolute bottom-[3%] right-[5%] hidden lg:block"
         >
           <motion.div
             animate={{ y: [0, -7, 0] }}
@@ -218,7 +218,7 @@ export default function Home() {
             className="rounded-xl border border-white/10 bg-brand-dark/80 px-4 py-3 shadow-2xl backdrop-blur-sm"
           >
             <div className="flex items-center gap-3">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/200px-Amazon_logo.svg.png" alt="Amazon" className="h-6 w-8 object-contain" />
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white"><svg viewBox="0 0 40 40" className="h-7 w-7"><rect width="40" height="40" rx="4" fill="white"/><text x="12" y="30" fill="#232F3E" fontSize="26" fontWeight="bold" fontFamily="Arial">a</text><path d="M25 27 Q30 25 33 27" stroke="#FF9900" strokeWidth="2.5" fill="none" strokeLinecap="round"/></svg></div>
               <div>
                 <p className="text-xs font-semibold text-brand-white">Venda confirmada</p>
                 <p className="text-[11px] text-brand-white/50">Serra Circular Dewalt · R$892,00</p>
