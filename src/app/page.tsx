@@ -163,22 +163,20 @@ export default function Home() {
           </motion.div>
         </div>
 
-        {/* Floating marketplace notifications */}
+        {/* Floating marketplace notifications - positioned on the left side, below text */}
         <motion.div
-          initial={{ opacity: 0, x: 30 }}
-          animate={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8, duration: 0.6 }}
-          className="pointer-events-none absolute right-[8%] top-[25%] hidden lg:block"
+          className="pointer-events-none absolute bottom-[18%] left-[6%] hidden lg:block"
         >
           <motion.div
-            animate={{ y: [0, -8, 0] }}
+            animate={{ y: [0, -6, 0] }}
             transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
             className="rounded-xl border border-white/10 bg-brand-dark/80 px-4 py-3 shadow-2xl backdrop-blur-sm"
           >
             <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#FFE600]">
-                <span className="text-lg font-bold text-brand-dark">ML</span>
-              </div>
+              <img src="https://http2.mlstatic.com/frontend-assets/ml-web-navigation/ui-navigation/6.6.73/mercadolibre/logo_large_25years@2x.png" alt="Mercado Livre" className="h-8 w-8 rounded-lg object-contain" />
               <div>
                 <p className="text-xs font-semibold text-brand-white">Você vendeu!</p>
                 <p className="text-[11px] text-brand-white/50">Kit Chuveiro Lorenzetti · R$189,90</p>
@@ -188,20 +186,18 @@ export default function Home() {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, x: 30 }}
-          animate={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.2, duration: 0.6 }}
-          className="pointer-events-none absolute right-[15%] top-[50%] hidden lg:block"
+          className="pointer-events-none absolute bottom-[10%] left-[25%] hidden lg:block"
         >
           <motion.div
-            animate={{ y: [0, -6, 0] }}
+            animate={{ y: [0, -5, 0] }}
             transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
             className="rounded-xl border border-white/10 bg-brand-dark/80 px-4 py-3 shadow-2xl backdrop-blur-sm"
           >
             <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#EE4D2D]">
-                <span className="text-sm font-bold text-white">S</span>
-              </div>
+              <img src="https://cf.shopee.com.br/file/br-50009109-7a97ef55e3f4e8c2b1e39ed154a77810_xhdpi" alt="Shopee" className="h-8 w-8 rounded-lg object-contain" />
               <div>
                 <p className="text-xs font-semibold text-brand-white">Novo pedido Shopee</p>
                 <p className="text-[11px] text-brand-white/50">Furadeira Bosch 12V · R$347,00</p>
@@ -211,20 +207,18 @@ export default function Home() {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, x: 30 }}
-          animate={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.6, duration: 0.6 }}
-          className="pointer-events-none absolute right-[5%] top-[70%] hidden lg:block"
+          className="pointer-events-none absolute bottom-[4%] left-[12%] hidden lg:block"
         >
           <motion.div
-            animate={{ y: [0, -10, 0] }}
+            animate={{ y: [0, -7, 0] }}
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}
             className="rounded-xl border border-white/10 bg-brand-dark/80 px-4 py-3 shadow-2xl backdrop-blur-sm"
           >
             <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#FF9900]">
-                <span className="text-sm font-bold text-brand-dark">a</span>
-              </div>
+              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/200px-Amazon_logo.svg.png" alt="Amazon" className="h-6 w-8 object-contain" />
               <div>
                 <p className="text-xs font-semibold text-brand-white">Venda confirmada</p>
                 <p className="text-[11px] text-brand-white/50">Serra Circular Dewalt · R$892,00</p>
