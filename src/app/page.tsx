@@ -128,13 +128,13 @@ export default function Home() {
       </nav>
 
       {/* 1. HERO */}
-      <SectionWrapper className="relative pt-32 pb-20 md:pt-44 md:pb-28" id="hero">
+      <SectionWrapper className="relative min-h-[85vh] pt-32 pb-20 md:pt-44 md:pb-28" id="hero">
         {/* Background image */}
         <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
           <img
             src="/hero-bg.jpg"
             alt=""
-            className="h-full w-full object-cover object-[70%_20%]"
+            className="h-full w-full object-cover object-[center_top]"
           />
         </div>
         <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-r from-brand-darker/95 via-brand-darker/80 to-brand-darker/30" />
