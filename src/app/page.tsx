@@ -134,7 +134,7 @@ export default function Home() {
           <img
             src="/hero-bg.jpg"
             alt=""
-            className="h-full w-full object-cover object-[70%_15%]"
+            className="h-full w-full object-cover object-[70%_5%]"
           />
         </div>
         <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-r from-brand-darker/95 via-brand-darker/80 to-brand-darker/30" />
