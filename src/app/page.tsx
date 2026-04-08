@@ -128,13 +128,16 @@ export default function Home() {
       </nav>
 
       {/* 1. HERO */}
-      <SectionWrapper className="relative min-h-[600px] pt-32 pb-20 md:min-h-[700px] md:pt-44 md:pb-28" id="hero">
+      <SectionWrapper className="relative pt-32 pb-20 md:pt-44 md:pb-28" id="hero">
         {/* Background image */}
-        <div
-          className="pointer-events-none absolute inset-0 -z-10 bg-[length:100%_auto] bg-[center_20%] bg-no-repeat"
-          style={{ backgroundImage: "url('/hero-bg.jpg')" }}
-        />
-        <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-r from-brand-darker/95 via-brand-darker/75 to-transparent" />
+        <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+          <img
+            src="/hero-bg.jpg"
+            alt=""
+            className="h-full w-full object-cover object-[70%_15%]"
+          />
+        </div>
+        <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-r from-brand-darker/95 via-brand-darker/80 to-brand-darker/30" />
         <div className="max-w-3xl">
           <motion.h1
             variants={fadeUp}
