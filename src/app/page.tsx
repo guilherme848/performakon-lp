@@ -176,7 +176,7 @@ export default function Home() {
             className="rounded-xl border border-white/10 bg-brand-dark/80 px-4 py-3 shadow-2xl backdrop-blur-sm"
           >
             <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white"><svg viewBox="0 0 40 40" className="h-7 w-7"><circle cx="20" cy="20" r="20" fill="#FFE600"/><path d="M12 22c0 0 4-6 8-6s8 6 8 6" stroke="#2D3277" strokeWidth="2.5" fill="none" strokeLinecap="round"/><path d="M14 20c0 0 3-4 6-4s6 4 6 4" stroke="#2D3277" strokeWidth="2" fill="none" strokeLinecap="round"/></svg></div>
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white p-1"><img src="/logo-ml.png" alt="Mercado Livre" className="h-full w-full object-contain" /></div>
               <div>
                 <p className="text-xs font-semibold text-brand-white">Você vendeu!</p>
                 <p className="text-[11px] text-brand-white/50">Kit Chuveiro Lorenzetti · R$189,90</p>
@@ -197,7 +197,7 @@ export default function Home() {
             className="rounded-xl border border-white/10 bg-brand-dark/80 px-4 py-3 shadow-2xl backdrop-blur-sm"
           >
             <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white"><svg viewBox="0 0 40 40" className="h-7 w-7"><rect width="40" height="40" rx="8" fill="#EE4D2D"/><text x="20" y="28" textAnchor="middle" fill="white" fontSize="20" fontWeight="bold" fontFamily="Arial">S</text></svg></div>
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white p-1"><img src="/logo-shopee.jpg" alt="Shopee" className="h-full w-full object-contain" /></div>
               <div>
                 <p className="text-xs font-semibold text-brand-white">Novo pedido Shopee</p>
                 <p className="text-[11px] text-brand-white/50">Furadeira Bosch 12V · R$347,00</p>
@@ -218,7 +218,7 @@ export default function Home() {
             className="rounded-xl border border-white/10 bg-brand-dark/80 px-4 py-3 shadow-2xl backdrop-blur-sm"
           >
             <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white"><svg viewBox="0 0 40 40" className="h-7 w-7"><rect width="40" height="40" rx="4" fill="white"/><text x="12" y="30" fill="#232F3E" fontSize="26" fontWeight="bold" fontFamily="Arial">a</text><path d="M25 27 Q30 25 33 27" stroke="#FF9900" strokeWidth="2.5" fill="none" strokeLinecap="round"/></svg></div>
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white p-1"><img src="/logo-amazon.png" alt="Amazon" className="h-full w-full object-contain" /></div>
               <div>
                 <p className="text-xs font-semibold text-brand-white">Venda confirmada</p>
                 <p className="text-[11px] text-brand-white/50">Serra Circular Dewalt · R$892,00</p>
