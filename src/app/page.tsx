@@ -132,7 +132,7 @@ export default function Home() {
         {/* Background image */}
         <div
           className="pointer-events-none absolute inset-0 -z-10 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: "url('/hero-bg.png')" }}
+          style={{ backgroundImage: "url('/hero-bg.jpg')" }}
         />
         <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-r from-brand-darker/95 via-brand-darker/80 to-brand-darker/40" />
         <div className="max-w-3xl">
