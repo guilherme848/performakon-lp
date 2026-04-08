@@ -116,7 +116,7 @@ export default function Home() {
             alt="Performakon"
             width={180}
             height={48}
-            className="h-10 w-auto sm:h-12"
+            className="h-8 w-auto sm:h-10"
           />
           <a
             href={CTA_URL}
