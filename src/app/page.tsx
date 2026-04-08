@@ -137,11 +137,11 @@ export default function Home() {
             className="h-full w-full object-cover object-[center_top]"
           />
         </div>
-        <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-r from-brand-darker/95 via-brand-darker/80 to-brand-darker/30" />
-        <div className="max-w-3xl">
+        <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-r from-brand-darker/90 via-brand-darker/60 to-brand-darker/20" />
+        <div className="max-w-2xl">
           <motion.h1
             variants={fadeUp}
-            className="text-4xl font-extrabold leading-tight tracking-tight md:text-6xl"
+            className="text-3xl font-extrabold leading-[1.15] tracking-tight md:text-5xl"
           >
             Venda no Mercado Livre com{" "}
             <span className="text-brand-yellow">margem real</span> — não com
@@ -149,19 +149,89 @@ export default function Home() {
           </motion.h1>
           <motion.p
             variants={fadeUp}
-            className="mt-6 text-lg leading-relaxed text-brand-white/70 md:text-xl"
+            className="mt-5 text-base leading-relaxed text-brand-white/70 md:text-lg"
           >
             A PERFORMAKON estrutura sua operação no Mercado Livre do zero:
             catálogo, precificação, publicidade e logística. Tudo com foco em
             lucro por produto — não em faturamento de vaidade.
           </motion.p>
-          <motion.div variants={fadeUp} className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <motion.div variants={fadeUp} className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
             <CTAButton />
             <span className="text-sm text-brand-white/50">
               30 min · Sem compromisso · Sem enrolação
             </span>
           </motion.div>
         </div>
+
+        {/* Floating marketplace notifications */}
+        <motion.div
+          initial={{ opacity: 0, x: 30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.8, duration: 0.6 }}
+          className="pointer-events-none absolute right-[8%] top-[25%] hidden lg:block"
+        >
+          <motion.div
+            animate={{ y: [0, -8, 0] }}
+            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            className="rounded-xl border border-white/10 bg-brand-dark/80 px-4 py-3 shadow-2xl backdrop-blur-sm"
+          >
+            <div className="flex items-center gap-3">
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#FFE600]">
+                <span className="text-lg font-bold text-brand-dark">ML</span>
+              </div>
+              <div>
+                <p className="text-xs font-semibold text-brand-white">Você vendeu!</p>
+                <p className="text-[11px] text-brand-white/50">Kit Chuveiro Lorenzetti · R$189,90</p>
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, x: 30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 1.2, duration: 0.6 }}
+          className="pointer-events-none absolute right-[15%] top-[50%] hidden lg:block"
+        >
+          <motion.div
+            animate={{ y: [0, -6, 0] }}
+            transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+            className="rounded-xl border border-white/10 bg-brand-dark/80 px-4 py-3 shadow-2xl backdrop-blur-sm"
+          >
+            <div className="flex items-center gap-3">
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#EE4D2D]">
+                <span className="text-sm font-bold text-white">S</span>
+              </div>
+              <div>
+                <p className="text-xs font-semibold text-brand-white">Novo pedido Shopee</p>
+                <p className="text-[11px] text-brand-white/50">Furadeira Bosch 12V · R$347,00</p>
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, x: 30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 1.6, duration: 0.6 }}
+          className="pointer-events-none absolute right-[5%] top-[70%] hidden lg:block"
+        >
+          <motion.div
+            animate={{ y: [0, -10, 0] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+            className="rounded-xl border border-white/10 bg-brand-dark/80 px-4 py-3 shadow-2xl backdrop-blur-sm"
+          >
+            <div className="flex items-center gap-3">
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#FF9900]">
+                <span className="text-sm font-bold text-brand-dark">a</span>
+              </div>
+              <div>
+                <p className="text-xs font-semibold text-brand-white">Venda confirmada</p>
+                <p className="text-[11px] text-brand-white/50">Serra Circular Dewalt · R$892,00</p>
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
       </SectionWrapper>
 
       {/* 2. BARRA DE CONTEXTO */}
