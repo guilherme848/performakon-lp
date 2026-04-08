@@ -131,7 +131,7 @@ export default function Home() {
       <SectionWrapper className="relative min-h-[600px] pt-32 pb-20 md:min-h-[700px] md:pt-44 md:pb-28" id="hero">
         {/* Background image */}
         <div
-          className="pointer-events-none absolute inset-0 -z-10 bg-cover bg-[center_top] bg-no-repeat"
+          className="pointer-events-none absolute inset-0 -z-10 bg-[length:100%_auto] bg-[center_20%] bg-no-repeat"
           style={{ backgroundImage: "url('/hero-bg.jpg')" }}
         />
         <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-r from-brand-darker/95 via-brand-darker/75 to-transparent" />
