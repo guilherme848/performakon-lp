@@ -443,7 +443,7 @@ export default function Home() {
           <img
             src="/hero-bg.jpg"
             alt=""
-            className="h-full w-full object-cover object-[65%_15%] sm:object-[center_top]"
+            className="h-full w-full object-cover object-[72%_15%] sm:object-[center_top]"
           />
         </div>
         {/* Desktop: gradient left-to-right */}
