@@ -437,55 +437,47 @@ export default function Home() {
       </nav>
 
       {/* 1. HERO */}
-      <SectionWrapper className="relative min-h-0 pt-20 pb-0 sm:min-h-[85vh] sm:pt-32 md:pt-44 md:pb-28" id="hero">
-        {/* Background image - desktop only (behind everything) */}
-        <div className="pointer-events-none absolute inset-0 -z-10 hidden overflow-hidden sm:block">
+      <SectionWrapper className="relative min-h-[100svh] pt-0 pb-0 sm:min-h-[85vh] sm:pt-32 md:pt-44 md:pb-28" id="hero">
+        {/* Background image - all breakpoints */}
+        <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
           <img
             src="/hero-bg.jpg"
             alt=""
-            className="h-full w-full object-cover object-[center_top]"
+            className="h-full w-full object-cover object-[center_15%] sm:object-[center_top]"
           />
         </div>
+        {/* Desktop: gradient left-to-right */}
         <div className="pointer-events-none absolute inset-0 -z-10 hidden sm:block bg-gradient-to-r from-brand-darker/90 via-brand-darker/60 to-brand-darker/20" />
+        {/* Mobile: gradient bottom-to-top — starts solid at bottom, fades out above faces */}
+        <div className="pointer-events-none absolute inset-0 -z-10 sm:hidden" style={{ background: "linear-gradient(to top, #1e2f3a 0%, #1e2f3a 30%, rgba(30,47,58,0.85) 50%, rgba(30,47,58,0.3) 65%, transparent 80%)" }} />
 
-        {/* Mobile: text centered, then image below */}
-        <div className="text-center sm:text-left sm:max-w-2xl">
-          <motion.h1
-            variants={fadeUp}
-            className="text-[1.75rem] font-extrabold leading-[1.15] tracking-tight sm:text-3xl md:text-5xl"
-          >
-            Venda no Mercado Livre com{" "}
-            <span className="text-brand-yellow">margem real</span> — não com
-            achismo.
-          </motion.h1>
-          <motion.p
-            variants={fadeUp}
-            className="mt-4 text-sm leading-relaxed text-brand-white/70 sm:mt-5 sm:text-base md:text-lg"
-          >
-            A PERFORMAKON estrutura sua operação no Mercado Livre do zero:
-            catálogo, precificação, publicidade e logística. Tudo com foco em
-            lucro por produto — não em faturamento de vaidade.
-          </motion.p>
-          <motion.div variants={fadeUp} className="mt-6 flex flex-col items-center gap-3 sm:mt-8 sm:flex-row sm:items-center">
-            <CTAButton onClick={openForm} />
-            <span className="text-xs text-brand-white/50 sm:text-sm">
-              30 min · Sem compromisso · Sem enrolação
-            </span>
-          </motion.div>
+        {/* Mobile: push text to bottom with extra padding; Desktop: normal flow */}
+        <div className="flex min-h-[100svh] flex-col justify-end pb-6 sm:min-h-0 sm:pb-0 sm:block">
+          <div className="text-center sm:text-left sm:max-w-2xl">
+            <motion.h1
+              variants={fadeUp}
+              className="text-[1.75rem] font-extrabold leading-[1.15] tracking-tight sm:text-3xl md:text-5xl"
+            >
+              Venda no Mercado Livre com{" "}
+              <span className="text-brand-yellow">margem real</span> — não com
+              achismo.
+            </motion.h1>
+            <motion.p
+              variants={fadeUp}
+              className="mt-4 text-sm leading-relaxed text-brand-white/70 sm:mt-5 sm:text-base md:text-lg"
+            >
+              A PERFORMAKON estrutura sua operação no Mercado Livre do zero:
+              catálogo, precificação, publicidade e logística. Tudo com foco em
+              lucro por produto — não em faturamento de vaidade.
+            </motion.p>
+            <motion.div variants={fadeUp} className="mt-6 flex flex-col items-center gap-3 sm:mt-8 sm:flex-row sm:items-center">
+              <CTAButton onClick={openForm} />
+              <span className="text-xs text-brand-white/50 sm:text-sm">
+                30 min · Sem compromisso · Sem enrolação
+              </span>
+            </motion.div>
+          </div>
         </div>
-
-        {/* Mobile: hero image visible below text */}
-        <motion.div
-          variants={fadeUp}
-          className="mt-8 overflow-hidden rounded-2xl sm:hidden"
-        >
-          <img
-            src="/hero-bg.jpg"
-            alt="Fundadores Performakon"
-            className="w-full object-cover object-[center_20%]"
-            style={{ aspectRatio: "16/10" }}
-          />
-        </motion.div>
 
         {/* Floating marketplace notifications - right side, below faces */}
         <motion.div
