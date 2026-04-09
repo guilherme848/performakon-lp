@@ -449,10 +449,10 @@ export default function Home() {
         {/* Desktop: gradient left-to-right */}
         <div className="pointer-events-none absolute inset-0 -z-10 hidden sm:block bg-gradient-to-r from-brand-darker/90 via-brand-darker/60 to-brand-darker/20" />
         {/* Mobile: gradient bottom-to-top — starts solid at bottom, fades out above faces */}
-        <div className="pointer-events-none absolute inset-0 -z-10 sm:hidden" style={{ background: "linear-gradient(to top, #1e2f3a 0%, #1e2f3a 30%, rgba(30,47,58,0.85) 50%, rgba(30,47,58,0.3) 65%, transparent 80%)" }} />
+        <div className="pointer-events-none absolute inset-0 -z-10 sm:hidden" style={{ background: "linear-gradient(to top, #1e2f3a 0%, #1e2f3a 25%, rgba(30,47,58,0.85) 42%, rgba(30,47,58,0.3) 58%, transparent 72%)" }} />
 
         {/* Mobile: push text to bottom with extra padding; Desktop: normal flow */}
-        <div className="flex min-h-[100svh] flex-col justify-end pb-6 sm:min-h-0 sm:pb-0 sm:block">
+        <div className="flex min-h-[100svh] flex-col justify-center pt-32 sm:min-h-0 sm:pt-0 sm:pb-0 sm:block">
           <div className="text-center sm:text-left sm:max-w-2xl">
             <motion.h1
               variants={fadeUp}
