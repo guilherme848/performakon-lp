@@ -26,12 +26,27 @@ import { AnimatePresence } from "framer-motion";
 const CLINT_WEBHOOK = "https://functions-api.clint.digital/endpoints/integration/webhook/41090861-a54c-4baf-a7f7-386f6a5cfb33";
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 32 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" as const } },
+  hidden: { opacity: 0, y: 32, filter: "blur(8px)" },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: { duration: 0.7, ease: "easeOut" as const },
+  },
+};
+
+const fadeScale = {
+  hidden: { opacity: 0, scale: 0.92, filter: "blur(6px)" },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    filter: "blur(0px)",
+    transition: { duration: 0.6, ease: "easeOut" as const },
+  },
 };
 
 const stagger = {
-  visible: { transition: { staggerChildren: 0.12 } },
+  visible: { transition: { staggerChildren: 0.1 } },
 };
 
 function SectionWrapper({
@@ -63,12 +78,14 @@ function CTAButton({ className = "", onClick }: { className?: string; onClick?: 
       type="button"
       onClick={onClick}
       variants={fadeUp}
-      whileHover={{ scale: 1.03 }}
-      whileTap={{ scale: 0.97 }}
-      className={`inline-flex items-center gap-2 rounded-lg bg-brand-yellow px-6 py-3 text-base font-bold text-brand-dark transition-colors hover:bg-brand-yellow-hover sm:px-8 sm:py-4 sm:text-lg cursor-pointer ${className}`}
+      whileHover={{ scale: 1.04, boxShadow: "0 0 30px rgba(252,227,0,0.35)" }}
+      whileTap={{ scale: 0.96 }}
+      transition={{ type: "spring", stiffness: 400, damping: 17 }}
+      className={`group relative inline-flex items-center gap-2 overflow-hidden rounded-xl bg-brand-yellow px-6 py-3 text-base font-bold text-brand-dark shadow-[0_0_20px_rgba(252,227,0,0.15)] transition-all hover:bg-brand-yellow-hover hover:shadow-[0_0_30px_rgba(252,227,0,0.3)] sm:px-8 sm:py-4 sm:text-lg cursor-pointer ${className}`}
     >
-      Conhecer o Método
-      <ArrowRight className="h-5 w-5" />
+      <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
+      <span className="relative">Conhecer o Método</span>
+      <ArrowRight className="relative h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
     </motion.button>
   );
 }
@@ -352,18 +369,21 @@ function LeadFormModal({ onClose }: { onClose: () => void }) {
                 ) : (
                   <span />
                 )}
-                <button
+                <motion.button
                   type="button"
                   onClick={next}
                   disabled={!canAdvance() || sending}
-                  className="rounded-lg bg-brand-yellow px-6 py-3 font-bold text-brand-dark transition-all hover:bg-brand-yellow-hover disabled:cursor-not-allowed disabled:opacity-40"
+                  whileHover={canAdvance() && !sending ? { scale: 1.04, boxShadow: "0 0 24px rgba(252,227,0,0.3)" } : {}}
+                  whileTap={canAdvance() && !sending ? { scale: 0.96 } : {}}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                  className="rounded-xl bg-brand-yellow px-6 py-3 font-bold text-brand-dark shadow-[0_0_12px_rgba(252,227,0,0.1)] transition-all hover:bg-brand-yellow-hover disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none"
                 >
                   {sending
                     ? "Enviando..."
                     : step === totalSteps || (step === 3 && form.vendeML === "nao")
                       ? "Enviar"
                       : "Continuar"}
-                </button>
+                </motion.button>
               </div>
             </>
           )}
@@ -388,17 +408,23 @@ function FAQItem({
     >
       <button
         onClick={() => setOpen(!open)}
-        className="flex w-full items-center justify-between gap-4 py-5 text-left text-lg font-semibold text-brand-white transition-colors hover:text-brand-yellow"
+        className="group flex w-full items-center justify-between gap-4 py-5 text-left text-lg font-semibold text-brand-white transition-colors hover:text-brand-yellow"
       >
         {question}
-        <ChevronDown
-          className={`h-5 w-5 shrink-0 text-brand-yellow transition-transform duration-300 ${open ? "rotate-180" : ""}`}
-        />
+        <motion.div
+          animate={{ rotate: open ? 180 : 0 }}
+          transition={{ type: "spring", stiffness: 300, damping: 20 }}
+        >
+          <ChevronDown className="h-5 w-5 shrink-0 text-brand-yellow" />
+        </motion.div>
       </button>
       <motion.div
         initial={false}
-        animate={{ height: open ? "auto" : 0, opacity: open ? 1 : 0 }}
-        transition={{ duration: 0.3 }}
+        animate={{
+          height: open ? "auto" : 0,
+          opacity: open ? 1 : 0,
+        }}
+        transition={{ type: "spring", stiffness: 250, damping: 30 }}
         className="overflow-hidden"
       >
         <p className="pb-5 leading-relaxed text-brand-white/70">{answer}</p>
@@ -427,12 +453,16 @@ export default function Home() {
             height={48}
             className="h-7 w-auto sm:h-10"
           />
-          <button
+          <motion.button
             onClick={openForm}
-            className="rounded-lg bg-brand-yellow px-4 py-2 text-xs font-bold text-brand-dark transition-colors hover:bg-brand-yellow-hover sm:px-5 sm:py-2.5 sm:text-sm cursor-pointer"
+            whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(252,227,0,0.3)" }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 400, damping: 17 }}
+            className="group relative overflow-hidden rounded-xl bg-brand-yellow px-4 py-2 text-xs font-bold text-brand-dark shadow-[0_0_12px_rgba(252,227,0,0.1)] transition-all hover:bg-brand-yellow-hover hover:shadow-[0_0_20px_rgba(252,227,0,0.25)] sm:px-5 sm:py-2.5 sm:text-sm cursor-pointer"
           >
-            Conhecer o Método
-          </button>
+            <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
+            <span className="relative">Conhecer o Método</span>
+          </motion.button>
         </div>
       </nav>
 
@@ -552,7 +582,7 @@ export default function Home() {
             { number: "70%", numberLg: "70%", text: "das vendas online são marketplace" },
             { number: "R$57 bi", numberLg: "R$57 bi", text: "investidos pelo ML em 2026" },
           ].map((item) => (
-            <motion.div key={item.number} variants={fadeUp} className="text-center">
+            <motion.div key={item.number} variants={fadeScale} className="text-center">
               <p className="text-xl font-extrabold text-brand-yellow sm:text-3xl md:text-4xl">
                 <span className="sm:hidden">{item.number}</span>
                 <span className="hidden sm:inline">{item.numberLg}</span>
@@ -604,10 +634,14 @@ export default function Home() {
           ].map((item) => (
             <motion.div
               key={item.title}
-              variants={fadeUp}
-              className="group rounded-2xl border border-brand-teal/20 bg-brand-dark p-5 sm:p-8 transition-colors hover:border-brand-yellow/40"
+              variants={fadeScale}
+              whileHover={{ y: -6, borderColor: "rgba(252,227,0,0.4)", boxShadow: "0 12px 40px rgba(0,0,0,0.3)" }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              className="group rounded-2xl border border-brand-teal/20 bg-brand-dark p-5 sm:p-8 transition-colors"
             >
-              <item.icon className="h-6 w-6 text-brand-yellow sm:h-8 sm:w-8" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-yellow/10 transition-colors group-hover:bg-brand-yellow/20 sm:h-12 sm:w-12">
+                <item.icon className="h-5 w-5 text-brand-yellow sm:h-6 sm:w-6" />
+              </div>
               <h3 className="mt-3 text-base font-bold sm:mt-4 sm:text-xl">{item.title}</h3>
               <p className="mt-2 text-sm leading-relaxed text-brand-white/60 sm:mt-3 sm:text-base">
                 {item.text}
@@ -657,10 +691,12 @@ export default function Home() {
           ].map((item) => (
             <motion.div
               key={item.title}
-              variants={fadeUp}
-              className="rounded-2xl border border-brand-teal/20 bg-brand-darker p-5 sm:p-8"
+              variants={fadeScale}
+              whileHover={{ y: -6, boxShadow: "0 16px 48px rgba(0,0,0,0.3)" }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              className="group rounded-2xl border border-brand-teal/20 bg-brand-darker p-5 sm:p-8 transition-colors hover:border-brand-yellow/30"
             >
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-yellow/10">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-yellow/10 transition-all group-hover:bg-brand-yellow/20 group-hover:scale-110">
                 <item.icon className="h-6 w-6 text-brand-yellow" />
               </div>
               <h3 className="mt-5 text-xl font-bold">{item.title}</h3>
@@ -728,10 +764,12 @@ export default function Home() {
           ].map((item) => (
             <motion.div
               key={item.phase}
-              variants={fadeUp}
-              className="relative rounded-2xl border border-brand-teal/20 bg-brand-dark p-5 sm:p-8"
+              variants={fadeScale}
+              whileHover={{ y: -6, borderColor: "rgba(252,227,0,0.3)", boxShadow: "0 12px 40px rgba(0,0,0,0.3)" }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              className="group relative rounded-2xl border border-brand-teal/20 bg-brand-dark p-5 sm:p-8 transition-colors"
             >
-              <span className="text-5xl font-extrabold text-brand-yellow/20">
+              <span className="text-5xl font-extrabold text-brand-yellow/10 transition-colors group-hover:text-brand-yellow/25">
                 {item.phase}
               </span>
               <h3 className="mt-2 text-2xl font-bold">{item.title}</h3>
@@ -796,10 +834,12 @@ export default function Home() {
           ].map((item) => (
             <motion.div
               key={item.title}
-              variants={fadeUp}
-              className="rounded-2xl border border-brand-teal/20 bg-brand-darker p-7 transition-colors hover:border-brand-yellow/30"
+              variants={fadeScale}
+              whileHover={{ y: -4, boxShadow: "0 12px 36px rgba(0,0,0,0.25)" }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              className="group rounded-2xl border border-brand-teal/20 bg-brand-darker p-7 transition-colors hover:border-brand-yellow/30"
             >
-              <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-brand-yellow/10">
+              <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-brand-yellow/10 transition-all group-hover:bg-brand-yellow/20 group-hover:scale-110">
                 <item.icon className="h-5 w-5 text-brand-yellow" />
               </div>
               <h3 className="mt-4 text-lg font-bold">{item.title}</h3>
@@ -841,10 +881,14 @@ export default function Home() {
           ].map((item) => (
             <motion.div
               key={item.title}
-              variants={fadeUp}
-              className="rounded-2xl border border-brand-yellow/20 bg-brand-dark p-5 sm:p-8"
+              variants={fadeScale}
+              whileHover={{ y: -6, boxShadow: "0 16px 48px rgba(252,227,0,0.08)" }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              className="group rounded-2xl border border-brand-yellow/20 bg-brand-dark p-5 sm:p-8 transition-colors hover:border-brand-yellow/40"
             >
-              <item.icon className="h-8 w-8 text-brand-yellow" />
+              <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-brand-yellow/10 transition-all group-hover:bg-brand-yellow/20 group-hover:scale-110">
+                <item.icon className="h-7 w-7 text-brand-yellow" />
+              </div>
               <h3 className="mt-4 text-xl font-bold">{item.title}</h3>
               <p className="mt-3 leading-relaxed text-brand-white/60">
                 {item.text}
@@ -889,11 +933,11 @@ export default function Home() {
                 { label: "Acompanhamento", solo: "Nenhum", generic: "Call mensal", pk: "Calls semanais + suporte diário" },
                 { label: "Conhecimento do ML", solo: "Vídeos do YouTube", generic: "Teoria de mercado", pk: "Operação própria desde 2020" },
               ].map((row) => (
-                <tr key={row.label}>
+                <tr key={row.label} className="transition-colors hover:bg-brand-teal/5">
                   <td className="p-5 font-semibold text-brand-white">{row.label}</td>
                   <td className="p-5 text-brand-white/40">{row.solo}</td>
                   <td className="p-5 text-brand-white/40">{row.generic}</td>
-                  <td className="p-5 font-medium text-brand-yellow">{row.pk}</td>
+                  <td className="p-5 font-medium text-brand-yellow bg-brand-yellow/[0.03]">{row.pk}</td>
                 </tr>
               ))}
             </tbody>
