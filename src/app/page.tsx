@@ -122,7 +122,7 @@ function LeadFormModal({ onClose }: { onClose: () => void }) {
   const submit = async () => {
     setSending(true);
     try {
-      await fetch(CLINT_WEBHOOK, {
+      await fetch("/api/lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
