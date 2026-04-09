@@ -65,7 +65,7 @@ function CTAButton({ className = "", onClick }: { className?: string; onClick?: 
       variants={fadeUp}
       whileHover={{ scale: 1.03 }}
       whileTap={{ scale: 0.97 }}
-      className={`inline-flex items-center gap-2 rounded-lg bg-brand-yellow px-8 py-4 text-lg font-bold text-brand-dark transition-colors hover:bg-brand-yellow-hover cursor-pointer ${className}`}
+      className={`inline-flex items-center gap-2 rounded-lg bg-brand-yellow px-6 py-3 text-base font-bold text-brand-dark transition-colors hover:bg-brand-yellow-hover sm:px-8 sm:py-4 sm:text-lg cursor-pointer ${className}`}
     >
       Conhecer o Método
       <ArrowRight className="h-5 w-5" />
@@ -154,7 +154,7 @@ function LeadFormModal({ onClose }: { onClose: () => void }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 px-4 backdrop-blur-sm"
+      className="fixed inset-0 z-[100] flex items-end justify-center bg-black/60 backdrop-blur-sm sm:items-center sm:px-4"
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
       <motion.div
@@ -162,7 +162,7 @@ function LeadFormModal({ onClose }: { onClose: () => void }) {
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
         transition={{ type: "spring", damping: 25, stiffness: 300 }}
-        className="relative w-full max-w-md overflow-hidden rounded-2xl border border-brand-teal/20 bg-brand-darker shadow-2xl"
+        className="relative w-full max-w-md overflow-hidden rounded-none border-0 bg-brand-darker shadow-2xl sm:rounded-2xl sm:border sm:border-brand-teal/20 max-h-[100dvh] sm:max-h-[90vh] overflow-y-auto"
       >
         {/* Close button */}
         <button
@@ -419,17 +419,17 @@ export default function Home() {
       </AnimatePresence>
       {/* NAV */}
       <nav className="fixed top-0 z-50 w-full border-b border-brand-teal/20 bg-brand-darker/90 backdrop-blur-md">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4 md:px-12 lg:px-20">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6 sm:py-4 md:px-12 lg:px-20">
           <Image
             src="/logo-performakon.png"
             alt="Performakon"
             width={180}
             height={48}
-            className="h-8 w-auto sm:h-10"
+            className="h-7 w-auto sm:h-10"
           />
           <button
             onClick={openForm}
-            className="hidden rounded-lg bg-brand-yellow px-5 py-2.5 text-sm font-bold text-brand-dark transition-colors hover:bg-brand-yellow-hover sm:inline-flex cursor-pointer"
+            className="rounded-lg bg-brand-yellow px-4 py-2 text-xs font-bold text-brand-dark transition-colors hover:bg-brand-yellow-hover sm:px-5 sm:py-2.5 sm:text-sm cursor-pointer"
           >
             Conhecer o Método
           </button>
@@ -437,20 +437,20 @@ export default function Home() {
       </nav>
 
       {/* 1. HERO */}
-      <SectionWrapper className="relative min-h-[85vh] pt-32 pb-20 md:pt-44 md:pb-28" id="hero">
+      <SectionWrapper className="relative min-h-[100svh] pt-24 pb-16 sm:min-h-[85vh] sm:pt-32 md:pt-44 md:pb-28" id="hero">
         {/* Background image */}
         <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
           <img
             src="/hero-bg.jpg"
             alt=""
-            className="h-full w-full object-cover object-[center_top]"
+            className="h-full w-full object-cover object-[65%_top] sm:object-[center_top]"
           />
         </div>
-        <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-r from-brand-darker/90 via-brand-darker/60 to-brand-darker/20" />
+        <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-brand-darker/95 via-brand-darker/70 to-brand-darker/50 sm:bg-gradient-to-r sm:from-brand-darker/90 sm:via-brand-darker/60 sm:to-brand-darker/20" />
         <div className="max-w-2xl">
           <motion.h1
             variants={fadeUp}
-            className="text-3xl font-extrabold leading-[1.15] tracking-tight md:text-5xl"
+            className="text-[1.75rem] font-extrabold leading-[1.15] tracking-tight sm:text-3xl md:text-5xl"
           >
             Venda no Mercado Livre com{" "}
             <span className="text-brand-yellow">margem real</span> — não com
@@ -458,15 +458,15 @@ export default function Home() {
           </motion.h1>
           <motion.p
             variants={fadeUp}
-            className="mt-5 text-base leading-relaxed text-brand-white/70 md:text-lg"
+            className="mt-4 text-sm leading-relaxed text-brand-white/70 sm:mt-5 sm:text-base md:text-lg"
           >
             A PERFORMAKON estrutura sua operação no Mercado Livre do zero:
             catálogo, precificação, publicidade e logística. Tudo com foco em
             lucro por produto — não em faturamento de vaidade.
           </motion.p>
-          <motion.div variants={fadeUp} className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <motion.div variants={fadeUp} className="mt-6 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:items-center">
             <CTAButton onClick={openForm} />
-            <span className="text-sm text-brand-white/50">
+            <span className="text-xs text-brand-white/50 sm:text-sm">
               30 min · Sem compromisso · Sem enrolação
             </span>
           </motion.div>
@@ -538,24 +538,25 @@ export default function Home() {
       </SectionWrapper>
 
       {/* 2. BARRA DE CONTEXTO */}
-      <SectionWrapper className="py-12 bg-brand-dark">
-        <div className="grid gap-8 md:grid-cols-3">
+      <SectionWrapper className="py-8 sm:py-12 bg-brand-dark">
+        <div className="grid grid-cols-3 gap-4 sm:gap-8">
           {[
-            { number: "85 milhões", text: "de compradores ativos no Mercado Livre" },
-            { number: "70%", text: "das vendas online no Brasil passam por marketplaces" },
-            { number: "R$57 bi", text: "investidos pelo ML no Brasil em 2026" },
+            { number: "85 mi", numberLg: "85 milhões", text: "compradores ativos no ML" },
+            { number: "70%", numberLg: "70%", text: "das vendas online são marketplace" },
+            { number: "R$57 bi", numberLg: "R$57 bi", text: "investidos pelo ML em 2026" },
           ].map((item) => (
             <motion.div key={item.number} variants={fadeUp} className="text-center">
-              <p className="text-3xl font-extrabold text-brand-yellow md:text-4xl">
-                {item.number}
+              <p className="text-xl font-extrabold text-brand-yellow sm:text-3xl md:text-4xl">
+                <span className="sm:hidden">{item.number}</span>
+                <span className="hidden sm:inline">{item.numberLg}</span>
               </p>
-              <p className="mt-2 text-brand-white/60">{item.text}</p>
+              <p className="mt-1 text-xs text-brand-white/60 sm:mt-2 sm:text-base">{item.text}</p>
             </motion.div>
           ))}
         </div>
         <motion.p
           variants={fadeUp}
-          className="mt-10 text-center text-lg font-medium text-brand-white/80"
+          className="mt-6 text-center text-sm font-medium text-brand-white/80 sm:mt-10 sm:text-lg"
         >
           O mercado está pronto. A pergunta é:{" "}
           <span className="text-brand-yellow">a sua operação está?</span>
@@ -563,10 +564,10 @@ export default function Home() {
       </SectionWrapper>
 
       {/* 3. SEÇÃO DE DOR */}
-      <SectionWrapper className="py-20 md:py-28">
+      <SectionWrapper className="py-14 sm:py-20 md:py-28">
         <motion.h2
           variants={fadeUp}
-          className="text-center text-3xl font-extrabold md:text-4xl"
+          className="text-center text-2xl font-extrabold sm:text-3xl md:text-4xl"
         >
           Você reconhece alguma dessas situações?
         </motion.h2>
@@ -597,11 +598,11 @@ export default function Home() {
             <motion.div
               key={item.title}
               variants={fadeUp}
-              className="group rounded-2xl border border-brand-teal/20 bg-brand-dark p-8 transition-colors hover:border-brand-yellow/40"
+              className="group rounded-2xl border border-brand-teal/20 bg-brand-dark p-5 sm:p-8 transition-colors hover:border-brand-yellow/40"
             >
-              <item.icon className="h-8 w-8 text-brand-yellow" />
-              <h3 className="mt-4 text-xl font-bold">{item.title}</h3>
-              <p className="mt-3 leading-relaxed text-brand-white/60">
+              <item.icon className="h-6 w-6 text-brand-yellow sm:h-8 sm:w-8" />
+              <h3 className="mt-3 text-base font-bold sm:mt-4 sm:text-xl">{item.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-brand-white/60 sm:mt-3 sm:text-base">
                 {item.text}
               </p>
             </motion.div>
@@ -610,7 +611,7 @@ export default function Home() {
 
         <motion.p
           variants={fadeUp}
-          className="mt-12 text-center text-lg text-brand-white/70"
+          className="mt-8 text-center text-sm text-brand-white/70 sm:mt-12 sm:text-lg"
         >
           Se você se identificou com pelo menos uma dessas situações, o problema
           não é o marketplace.{" "}
@@ -621,10 +622,10 @@ export default function Home() {
       </SectionWrapper>
 
       {/* 4. PARA QUEM É */}
-      <SectionWrapper className="py-20 md:py-28 bg-brand-dark">
+      <SectionWrapper className="py-14 sm:py-20 md:py-28 bg-brand-dark">
         <motion.h2
           variants={fadeUp}
-          className="text-center text-3xl font-extrabold md:text-4xl"
+          className="text-center text-2xl font-extrabold sm:text-3xl md:text-4xl"
         >
           A PERFORMAKON foi criada para quem:
         </motion.h2>
@@ -650,7 +651,7 @@ export default function Home() {
             <motion.div
               key={item.title}
               variants={fadeUp}
-              className="rounded-2xl border border-brand-teal/20 bg-brand-darker p-8"
+              className="rounded-2xl border border-brand-teal/20 bg-brand-darker p-5 sm:p-8"
             >
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-yellow/10">
                 <item.icon className="h-6 w-6 text-brand-yellow" />
@@ -675,10 +676,10 @@ export default function Home() {
       </SectionWrapper>
 
       {/* 5. O MÉTODO */}
-      <SectionWrapper className="py-20 md:py-28" id="metodo">
+      <SectionWrapper className="py-14 sm:py-20 md:py-28" id="metodo">
         <motion.h2
           variants={fadeUp}
-          className="text-center text-3xl font-extrabold md:text-4xl"
+          className="text-center text-2xl font-extrabold sm:text-3xl md:text-4xl"
         >
           Um método em 4 fases para transformar marketplace em{" "}
           <span className="text-brand-yellow">canal de lucro</span>.
@@ -721,7 +722,7 @@ export default function Home() {
             <motion.div
               key={item.phase}
               variants={fadeUp}
-              className="relative rounded-2xl border border-brand-teal/20 bg-brand-dark p-8"
+              className="relative rounded-2xl border border-brand-teal/20 bg-brand-dark p-5 sm:p-8"
             >
               <span className="text-5xl font-extrabold text-brand-yellow/20">
                 {item.phase}
@@ -744,10 +745,10 @@ export default function Home() {
       </SectionWrapper>
 
       {/* 6. O QUE VOCÊ RECEBE */}
-      <SectionWrapper className="py-20 md:py-28 bg-brand-dark">
+      <SectionWrapper className="py-14 sm:py-20 md:py-28 bg-brand-dark">
         <motion.h2
           variants={fadeUp}
-          className="text-center text-3xl font-extrabold md:text-4xl"
+          className="text-center text-2xl font-extrabold sm:text-3xl md:text-4xl"
         >
           Isso não é teoria.{" "}
           <span className="text-brand-yellow">É o que acontece na prática.</span>
@@ -804,10 +805,10 @@ export default function Home() {
       </SectionWrapper>
 
       {/* 7. POR QUE A PERFORMAKON */}
-      <SectionWrapper className="py-20 md:py-28">
+      <SectionWrapper className="py-14 sm:py-20 md:py-28">
         <motion.h2
           variants={fadeUp}
-          className="text-center text-3xl font-extrabold md:text-4xl"
+          className="text-center text-2xl font-extrabold sm:text-3xl md:text-4xl"
         >
           O que separa a PERFORMAKON de uma{" "}
           <span className="text-brand-yellow">consultoria genérica</span>.
@@ -834,7 +835,7 @@ export default function Home() {
             <motion.div
               key={item.title}
               variants={fadeUp}
-              className="rounded-2xl border border-brand-yellow/20 bg-brand-dark p-8"
+              className="rounded-2xl border border-brand-yellow/20 bg-brand-dark p-5 sm:p-8"
             >
               <item.icon className="h-8 w-8 text-brand-yellow" />
               <h3 className="mt-4 text-xl font-bold">{item.title}</h3>
@@ -847,10 +848,10 @@ export default function Home() {
       </SectionWrapper>
 
       {/* 8. COMPARATIVO */}
-      <SectionWrapper className="py-20 md:py-28 bg-brand-dark">
+      <SectionWrapper className="py-14 sm:py-20 md:py-28 bg-brand-dark">
         <motion.h2
           variants={fadeUp}
-          className="text-center text-3xl font-extrabold md:text-4xl"
+          className="text-center text-2xl font-extrabold sm:text-3xl md:text-4xl"
         >
           Três formas de operar no marketplace.{" "}
           <span className="text-brand-yellow">
@@ -894,10 +895,10 @@ export default function Home() {
       </SectionWrapper>
 
       {/* 9. FAQ */}
-      <SectionWrapper className="py-20 md:py-28">
+      <SectionWrapper className="py-14 sm:py-20 md:py-28">
         <motion.h2
           variants={fadeUp}
-          className="text-center text-3xl font-extrabold md:text-4xl"
+          className="text-center text-2xl font-extrabold sm:text-3xl md:text-4xl"
         >
           Perguntas que a gente sempre ouve.
         </motion.h2>
@@ -935,11 +936,11 @@ export default function Home() {
       </SectionWrapper>
 
       {/* 10. CTA FINAL */}
-      <SectionWrapper className="py-20 md:py-28 bg-brand-dark" id="conhecer-metodo">
+      <SectionWrapper className="py-14 sm:py-20 md:py-28 bg-brand-dark" id="conhecer-metodo">
         <div className="mx-auto max-w-2xl text-center">
           <motion.h2
             variants={fadeUp}
-            className="text-3xl font-extrabold md:text-4xl"
+            className="text-2xl font-extrabold sm:text-3xl md:text-4xl"
           >
             Marketplace é canal de verdade.{" "}
             <span className="text-brand-yellow">Mas só funciona com estrutura.</span>
@@ -975,7 +976,7 @@ export default function Home() {
       </SectionWrapper>
 
       {/* FOOTER */}
-      <footer className="border-t border-brand-teal/20 bg-brand-darker px-6 py-10 text-center text-sm text-brand-white/40">
+      <footer className="border-t border-brand-teal/20 bg-brand-darker px-4 py-8 text-center text-xs text-brand-white/40 sm:px-6 sm:py-10 sm:text-sm">
         <Image
           src="/logo-performakon.png"
           alt="Performakon"
