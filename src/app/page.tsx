@@ -472,15 +472,15 @@ function LeadFormModal({ onClose }: { onClose: () => void }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[100] flex items-end justify-center bg-black/70 backdrop-blur-md sm:items-center sm:px-4"
+      className="fixed inset-0 z-[100] flex items-start justify-center overflow-y-auto bg-black/70 backdrop-blur-md sm:items-center sm:px-4 sm:py-8"
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
       <motion.div
-        initial={{ y: 100, opacity: 0 }}
+        initial={{ y: 40, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        exit={{ y: 100, opacity: 0 }}
+        exit={{ y: 40, opacity: 0 }}
         transition={{ type: "spring", damping: 28, stiffness: 300 }}
-        className="relative w-full max-w-md overflow-hidden rounded-t-3xl border-0 bg-brand-darker shadow-[0_-10px_60px_rgba(0,0,0,0.5)] sm:rounded-2xl sm:border sm:border-brand-teal/20 sm:shadow-[0_20px_60px_rgba(0,0,0,0.5)] max-h-[95dvh] sm:max-h-[90vh] overflow-y-auto"
+        className="relative w-full min-h-[100dvh] bg-brand-darker shadow-[0_20px_60px_rgba(0,0,0,0.5)] sm:min-h-0 sm:max-w-md sm:rounded-2xl sm:border sm:border-brand-teal/20"
       >
         {/* Decorative top glow */}
         <div className="pointer-events-none absolute -top-20 left-1/2 h-40 w-40 -translate-x-1/2 rounded-full bg-brand-yellow/10 blur-3xl" />
@@ -495,14 +495,9 @@ function LeadFormModal({ onClose }: { onClose: () => void }) {
           <X className="h-4 w-4" />
         </motion.button>
 
-        {/* Drag handle — mobile */}
-        <div className="flex justify-center pt-3 sm:hidden">
-          <div className="h-1 w-10 rounded-full bg-brand-white/20" />
-        </div>
-
         {/* Progress bar with glow */}
         {!sent && (
-          <div className="mx-6 mt-4 h-1 overflow-hidden rounded-full bg-brand-dark sm:mx-8">
+          <div className="mx-6 mt-5 h-1 overflow-hidden rounded-full bg-brand-dark sm:mx-8 sm:mt-4">
             <motion.div
               className="h-full rounded-full bg-brand-yellow shadow-[0_0_8px_rgba(252,227,0,0.4)]"
               animate={{ width: `${(step / totalSteps) * 100}%` }}
