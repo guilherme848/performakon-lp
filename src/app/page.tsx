@@ -917,7 +917,7 @@ export default function Home() {
             <div className="flex items-center gap-3">
               <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white p-1"><img src="/logo-shopee.jpg" alt="Shopee" className="h-full w-full object-contain" /></div>
               <div>
-                <p className="text-xs font-semibold text-brand-white">Novo pedido Shopee</p>
+                <p className="text-xs font-semibold text-brand-white">Novo pedido</p>
                 <p className="text-[11px] text-brand-white/50">Furadeira Bosch 12V · R$347,00</p>
               </div>
             </div>
