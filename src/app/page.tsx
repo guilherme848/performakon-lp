@@ -20,8 +20,8 @@ import {
   ChevronDown,
   ArrowRight,
 } from "lucide-react";
-import { useState, useCallback } from "react";
-import { AnimatePresence } from "framer-motion";
+import { useState, useCallback, useEffect, useRef } from "react";
+import { AnimatePresence, useScroll, useSpring, useMotionValue, useTransform, useInView } from "framer-motion";
 
 const CLINT_WEBHOOK = "https://functions-api.clint.digital/endpoints/integration/webhook/41090861-a54c-4baf-a7f7-386f6a5cfb33";
 
@@ -48,6 +48,92 @@ const fadeScale = {
 const stagger = {
   visible: { transition: { staggerChildren: 0.1 } },
 };
+
+/* ============================================================
+   SCROLL PROGRESS BAR
+   ============================================================ */
+function ScrollProgress() {
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
+  return (
+    <motion.div
+      className="fixed top-0 left-0 right-0 z-[60] h-[3px] origin-left bg-brand-yellow"
+      style={{ scaleX }}
+    />
+  );
+}
+
+/* ============================================================
+   ANIMATED COUNTER
+   ============================================================ */
+function AnimatedCounter({ value, suffix = "" }: { value: string; suffix?: string }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const numericPart = value.replace(/[^0-9.]/g, "");
+  const prefix = value.replace(/[0-9.].*/g, "");
+  const num = parseFloat(numericPart) || 0;
+  const [display, setDisplay] = useState(0);
+
+  useEffect(() => {
+    if (!isInView) return;
+    const duration = 1500;
+    const start = performance.now();
+    const step = (now: number) => {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setDisplay(eased * num);
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }, [isInView, num]);
+
+  const formatted = num % 1 !== 0 ? display.toFixed(1) : Math.round(display).toString();
+
+  return (
+    <span ref={ref}>
+      {prefix}{formatted}{suffix}
+    </span>
+  );
+}
+
+/* ============================================================
+   FLOATING DECORATIVE SHAPES
+   ============================================================ */
+function FloatingShapes() {
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      <div className="animate-float-slow absolute -top-10 -left-10 h-40 w-40 rounded-full bg-brand-yellow/[0.03] blur-3xl" />
+      <div className="animate-float-slow-delay absolute top-1/3 -right-20 h-60 w-60 rounded-full bg-brand-teal/[0.05] blur-3xl" />
+      <div className="animate-float-slow-delay-2 absolute bottom-20 left-1/4 h-32 w-32 rounded-full bg-brand-yellow/[0.02] blur-2xl" />
+    </div>
+  );
+}
+
+/* ============================================================
+   MARKETPLACE LOGOS MARQUEE
+   ============================================================ */
+function MarqueeLogos() {
+  const logos = [
+    { src: "/logo-ml.png", name: "Mercado Livre" },
+    { src: "/logo-shopee.jpg", name: "Shopee" },
+    { src: "/logo-amazon.png", name: "Amazon" },
+  ];
+  const repeated = [...logos, ...logos, ...logos, ...logos, ...logos, ...logos];
+  return (
+    <div className="overflow-hidden border-y border-brand-teal/10 bg-brand-darker/80 py-5">
+      <div className="animate-marquee flex w-max items-center gap-12">
+        {repeated.map((logo, i) => (
+          <div key={i} className="flex items-center gap-3 opacity-40 grayscale transition-all hover:opacity-100 hover:grayscale-0">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white p-1">
+              <img src={logo.src} alt={logo.name} className="h-full w-full object-contain" />
+            </div>
+            <span className="text-sm font-medium text-brand-white/50">{logo.name}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 function SectionWrapper({
   children,
@@ -439,6 +525,7 @@ export default function Home() {
 
   return (
     <main className="overflow-x-hidden">
+      <ScrollProgress />
       {/* Lead Form Modal */}
       <AnimatePresence>
         {showForm && <LeadFormModal onClose={() => setShowForm(false)} />}
@@ -461,7 +548,13 @@ export default function Home() {
             className="group relative overflow-hidden rounded-xl bg-brand-yellow px-4 py-2 text-xs font-bold text-brand-dark shadow-[0_0_12px_rgba(252,227,0,0.1)] transition-all hover:bg-brand-yellow-hover hover:shadow-[0_0_20px_rgba(252,227,0,0.25)] sm:px-5 sm:py-2.5 sm:text-sm cursor-pointer"
           >
             <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
-            <span className="relative">Conhecer o Método</span>
+            <span className="relative flex items-center gap-2">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-pulse-ring absolute inline-flex h-full w-full rounded-full bg-brand-dark/40" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-brand-dark/60" />
+              </span>
+              Conhecer o Método
+            </span>
           </motion.button>
         </div>
       </nav>
@@ -574,18 +667,25 @@ export default function Home() {
         </motion.div>
       </SectionWrapper>
 
+      {/* MARQUEE LOGOS */}
+      <MarqueeLogos />
+
       {/* 2. BARRA DE CONTEXTO */}
-      <SectionWrapper className="py-8 sm:py-12 bg-brand-dark">
+      <SectionWrapper className="relative py-8 sm:py-12 bg-brand-dark">
         <div className="grid grid-cols-3 gap-4 sm:gap-8">
           {[
-            { number: "85 mi", numberLg: "85 milhões", text: "compradores ativos no ML" },
-            { number: "70%", numberLg: "70%", text: "das vendas online são marketplace" },
-            { number: "R$57 bi", numberLg: "R$57 bi", text: "investidos pelo ML em 2026" },
+            { value: "85", suffix: " mi", valueLg: "85", suffixLg: " milhões", text: "compradores ativos no ML" },
+            { value: "70", suffix: "%", valueLg: "70", suffixLg: "%", text: "das vendas online são marketplace" },
+            { value: "R$57", suffix: " bi", valueLg: "R$57", suffixLg: " bi", text: "investidos pelo ML em 2026" },
           ].map((item) => (
-            <motion.div key={item.number} variants={fadeScale} className="text-center">
+            <motion.div key={item.value} variants={fadeScale} className="text-center">
               <p className="text-xl font-extrabold text-brand-yellow sm:text-3xl md:text-4xl">
-                <span className="sm:hidden">{item.number}</span>
-                <span className="hidden sm:inline">{item.numberLg}</span>
+                <span className="sm:hidden">
+                  <AnimatedCounter value={item.value} suffix={item.suffix} />
+                </span>
+                <span className="hidden sm:inline">
+                  <AnimatedCounter value={item.valueLg} suffix={item.suffixLg} />
+                </span>
               </p>
               <p className="mt-1 text-xs text-brand-white/60 sm:mt-2 sm:text-base">{item.text}</p>
             </motion.div>
@@ -596,12 +696,12 @@ export default function Home() {
           className="mt-6 text-center text-sm font-medium text-brand-white/80 sm:mt-10 sm:text-lg"
         >
           O mercado está pronto. A pergunta é:{" "}
-          <span className="text-brand-yellow">a sua operação está?</span>
+          <span className="animate-gradient-text font-bold">a sua operação está?</span>
         </motion.p>
       </SectionWrapper>
 
       {/* 3. SEÇÃO DE DOR */}
-      <SectionWrapper className="py-14 sm:py-20 md:py-28">
+      <SectionWrapper className="relative py-14 sm:py-20 md:py-28 dot-grid">
         <motion.h2
           variants={fadeUp}
           className="text-center text-2xl font-extrabold sm:text-3xl md:text-4xl"
@@ -719,13 +819,14 @@ export default function Home() {
       </SectionWrapper>
 
       {/* 5. O MÉTODO */}
-      <SectionWrapper className="py-14 sm:py-20 md:py-28" id="metodo">
+      <SectionWrapper className="relative py-14 sm:py-20 md:py-28 dot-grid" id="metodo">
+        <FloatingShapes />
         <motion.h2
           variants={fadeUp}
           className="text-center text-2xl font-extrabold sm:text-3xl md:text-4xl"
         >
           Um método em 4 fases para transformar marketplace em{" "}
-          <span className="text-brand-yellow">canal de lucro</span>.
+          <span className="animate-gradient-text">canal de lucro</span>.
         </motion.h2>
         <motion.p
           variants={fadeUp}
@@ -735,7 +836,9 @@ export default function Home() {
           toda operação rentável passa por estas 4 etapas:
         </motion.p>
 
-        <div className="mt-16 grid gap-8 md:grid-cols-2">
+        <div className="relative mt-16 grid gap-8 md:grid-cols-2">
+          {/* Timeline connector line - desktop only */}
+          <div className="pointer-events-none absolute left-1/2 top-0 hidden h-full w-px bg-gradient-to-b from-brand-yellow/30 via-brand-yellow/10 to-transparent md:block" />
           {[
             {
               phase: "01",
@@ -852,7 +955,8 @@ export default function Home() {
       </SectionWrapper>
 
       {/* 7. POR QUE A PERFORMAKON */}
-      <SectionWrapper className="py-14 sm:py-20 md:py-28">
+      <SectionWrapper className="relative py-14 sm:py-20 md:py-28">
+        <FloatingShapes />
         <motion.h2
           variants={fadeUp}
           className="text-center text-2xl font-extrabold sm:text-3xl md:text-4xl"
@@ -987,14 +1091,15 @@ export default function Home() {
       </SectionWrapper>
 
       {/* 10. CTA FINAL */}
-      <SectionWrapper className="py-14 sm:py-20 md:py-28 bg-brand-dark" id="conhecer-metodo">
-        <div className="mx-auto max-w-2xl text-center">
+      <SectionWrapper className="relative py-14 sm:py-20 md:py-28 bg-brand-dark" id="conhecer-metodo">
+        <FloatingShapes />
+        <div className="relative mx-auto max-w-2xl rounded-3xl border border-brand-yellow/20 bg-brand-darker/50 p-8 text-center backdrop-blur-sm sm:p-14">
           <motion.h2
             variants={fadeUp}
             className="text-2xl font-extrabold sm:text-3xl md:text-4xl"
           >
             Marketplace é canal de verdade.{" "}
-            <span className="text-brand-yellow">Mas só funciona com estrutura.</span>
+            <span className="animate-gradient-text">Mas só funciona com estrutura.</span>
           </motion.h2>
           <motion.p
             variants={fadeUp}
@@ -1027,16 +1132,38 @@ export default function Home() {
       </SectionWrapper>
 
       {/* FOOTER */}
-      <footer className="border-t border-brand-teal/20 bg-brand-darker px-4 py-8 text-center text-xs text-brand-white/40 sm:px-6 sm:py-10 sm:text-sm">
-        <Image
-          src="/logo-performakon.png"
-          alt="Performakon"
-          width={140}
-          height={36}
-          className="mx-auto mb-4 h-6 w-auto"
-        />
-        <p>PERFORMAKON — Assessoria de Marketplace</p>
-        <p className="mt-1">Mercado Livre · Shopee · Amazon</p>
+      <footer className="border-t border-brand-teal/20 bg-brand-darker px-4 py-10 sm:px-6 sm:py-14">
+        <div className="mx-auto max-w-6xl">
+          <div className="flex flex-col items-center gap-6 sm:flex-row sm:justify-between">
+            <div className="text-center sm:text-left">
+              <Image
+                src="/logo-performakon.png"
+                alt="Performakon"
+                width={140}
+                height={36}
+                className="mx-auto mb-3 h-6 w-auto sm:mx-0"
+              />
+              <p className="text-sm text-brand-white/40">Assessoria de Marketplace</p>
+            </div>
+            <div className="flex items-center gap-6 text-xs text-brand-white/30">
+              <div className="flex items-center gap-2">
+                <div className="flex h-6 w-6 items-center justify-center rounded bg-white p-0.5"><img src="/logo-ml.png" alt="ML" className="h-full w-full object-contain" /></div>
+                <span>Mercado Livre</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="flex h-6 w-6 items-center justify-center rounded bg-white p-0.5"><img src="/logo-shopee.jpg" alt="Shopee" className="h-full w-full object-contain" /></div>
+                <span>Shopee</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="flex h-6 w-6 items-center justify-center rounded bg-white p-0.5"><img src="/logo-amazon.png" alt="Amazon" className="h-full w-full object-contain" /></div>
+                <span>Amazon</span>
+              </div>
+            </div>
+          </div>
+          <div className="mt-8 border-t border-brand-teal/10 pt-6 text-center text-xs text-brand-white/25">
+            <p>&copy; {new Date().getFullYear()} PERFORMAKON. Todos os direitos reservados.</p>
+          </div>
+        </div>
       </footer>
     </main>
   );
