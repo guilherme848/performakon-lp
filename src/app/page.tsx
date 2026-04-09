@@ -437,13 +437,13 @@ export default function Home() {
       </nav>
 
       {/* 1. HERO */}
-      <SectionWrapper className="relative min-h-[100svh] pt-0 pb-0 sm:min-h-[85vh] sm:pt-32 md:pt-44 md:pb-28" id="hero">
+      <SectionWrapper className="relative min-h-[85svh] pt-0 pb-0 sm:min-h-[85vh] sm:pt-32 md:pt-44 md:pb-28" id="hero">
         {/* Background image - all breakpoints */}
         <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
           <img
             src="/hero-bg.jpg"
             alt=""
-            className="h-full w-full object-cover object-[80%_15%] sm:object-[center_top]"
+            className="h-full w-full object-cover object-[85%_15%] sm:object-[center_top]"
           />
         </div>
         {/* Desktop: gradient left-to-right */}
@@ -452,7 +452,7 @@ export default function Home() {
         <div className="pointer-events-none absolute inset-0 -z-10 sm:hidden" style={{ background: "linear-gradient(to top, #1e2f3a 0%, #1e2f3a 25%, rgba(30,47,58,0.85) 42%, rgba(30,47,58,0.3) 58%, transparent 72%)" }} />
 
         {/* Mobile: push text to bottom with extra padding; Desktop: normal flow */}
-        <div className="flex min-h-[100svh] flex-col justify-center pt-32 sm:min-h-0 sm:pt-0 sm:pb-0 sm:block">
+        <div className="flex min-h-[85svh] flex-col justify-end pb-8 sm:min-h-0 sm:pb-0 sm:block">
           <div className="text-center sm:text-left sm:max-w-2xl">
             <motion.h1
               variants={fadeUp}
