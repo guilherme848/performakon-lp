@@ -20,9 +20,10 @@ import {
   ChevronDown,
   ArrowRight,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useCallback } from "react";
+import { AnimatePresence } from "framer-motion";
 
-const CTA_URL = "#conhecer-metodo";
+const CLINT_WEBHOOK = "https://functions-api.clint.digital/endpoints/integration/webhook/41090861-a54c-4baf-a7f7-386f6a5cfb33";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 32 },
@@ -56,18 +57,319 @@ function SectionWrapper({
   );
 }
 
-function CTAButton({ className = "" }: { className?: string }) {
+function CTAButton({ className = "", onClick }: { className?: string; onClick?: () => void }) {
   return (
-    <motion.a
-      href={CTA_URL}
+    <motion.button
+      type="button"
+      onClick={onClick}
       variants={fadeUp}
       whileHover={{ scale: 1.03 }}
       whileTap={{ scale: 0.97 }}
-      className={`inline-flex items-center gap-2 rounded-lg bg-brand-yellow px-8 py-4 text-lg font-bold text-brand-dark transition-colors hover:bg-brand-yellow-hover ${className}`}
+      className={`inline-flex items-center gap-2 rounded-lg bg-brand-yellow px-8 py-4 text-lg font-bold text-brand-dark transition-colors hover:bg-brand-yellow-hover cursor-pointer ${className}`}
     >
       Conhecer o Método
       <ArrowRight className="h-5 w-5" />
-    </motion.a>
+    </motion.button>
+  );
+}
+
+/* ============================================================
+   MULTI-STEP LEAD FORM MODAL
+   ============================================================ */
+const slideVariants = {
+  enter: { x: 40, opacity: 0 },
+  center: { x: 0, opacity: 1 },
+  exit: { x: -40, opacity: 0 },
+};
+
+function LeadFormModal({ onClose }: { onClose: () => void }) {
+  const [step, setStep] = useState(1);
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [form, setForm] = useState({
+    nome: "",
+    telefone: "",
+    empresa: "",
+    vendeML: "",
+    faturamento: "",
+  });
+
+  const update = (field: string, value: string) =>
+    setForm((prev) => ({ ...prev, [field]: value }));
+
+  const canAdvance = useCallback(() => {
+    if (step === 1) return form.nome.trim().length >= 2 && form.telefone.trim().length >= 10;
+    if (step === 2) return form.empresa.trim().length >= 2;
+    if (step === 3) return form.vendeML !== "";
+    if (step === 4) return form.faturamento !== "";
+    return false;
+  }, [step, form]);
+
+  const totalSteps = form.vendeML === "sim" ? 4 : 3;
+
+  const next = async () => {
+    if (step === 3 && form.vendeML === "nao") {
+      await submit();
+      return;
+    }
+    if (step === totalSteps) {
+      await submit();
+      return;
+    }
+    setStep((s) => s + 1);
+  };
+
+  const submit = async () => {
+    setSending(true);
+    try {
+      await fetch(CLINT_WEBHOOK, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.nome,
+          phone: form.telefone,
+          company: form.empresa,
+          sells_on_ml: form.vendeML === "sim",
+          revenue: form.faturamento || null,
+          source: "landing-page-performakon",
+          created_at: new Date().toISOString(),
+        }),
+      });
+    } catch {
+      // silently continue — lead still captured
+    }
+    setSending(false);
+    setSent(true);
+  };
+
+  const phoneMask = (value: string) => {
+    const digits = value.replace(/\D/g, "").slice(0, 11);
+    if (digits.length <= 2) return digits;
+    if (digits.length <= 7) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+    return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 px-4 backdrop-blur-sm"
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+    >
+      <motion.div
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.9, opacity: 0 }}
+        transition={{ type: "spring", damping: 25, stiffness: 300 }}
+        className="relative w-full max-w-md overflow-hidden rounded-2xl border border-brand-teal/20 bg-brand-darker shadow-2xl"
+      >
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          className="absolute right-4 top-4 text-brand-white/40 transition-colors hover:text-brand-white"
+        >
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M15 5L5 15M5 5l10 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
+        </button>
+
+        {/* Progress bar */}
+        {!sent && (
+          <div className="h-1 bg-brand-dark">
+            <motion.div
+              className="h-full bg-brand-yellow"
+              animate={{ width: `${(step / totalSteps) * 100}%` }}
+              transition={{ duration: 0.3 }}
+            />
+          </div>
+        )}
+
+        <div className="p-8">
+          {sent ? (
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="py-6 text-center"
+            >
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-brand-yellow/20">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#FCE300" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              </div>
+              <h3 className="text-2xl font-bold text-brand-white">Recebemos seus dados!</h3>
+              <p className="mt-3 text-brand-white/60">
+                Nossa equipe vai entrar em contato pelo WhatsApp em até 24h para agendar sua conversa.
+              </p>
+              <button
+                onClick={onClose}
+                className="mt-6 rounded-lg bg-brand-yellow px-6 py-3 font-bold text-brand-dark transition-colors hover:bg-brand-yellow-hover"
+              >
+                Fechar
+              </button>
+            </motion.div>
+          ) : (
+            <>
+              <AnimatePresence mode="wait">
+                {step === 1 && (
+                  <motion.div
+                    key="step1"
+                    variants={slideVariants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    transition={{ duration: 0.25 }}
+                  >
+                    <p className="text-sm font-medium text-brand-yellow">Passo 1 de {totalSteps}</p>
+                    <h3 className="mt-2 text-xl font-bold text-brand-white">Como podemos te chamar?</h3>
+                    <div className="mt-6 space-y-4">
+                      <div>
+                        <label className="mb-1.5 block text-sm text-brand-white/60">Seu nome</label>
+                        <input
+                          type="text"
+                          value={form.nome}
+                          onChange={(e) => update("nome", e.target.value)}
+                          placeholder="Ex: João Silva"
+                          className="w-full rounded-lg border border-brand-teal/30 bg-brand-dark px-4 py-3 text-brand-white placeholder-brand-white/30 outline-none transition-colors focus:border-brand-yellow"
+                          autoFocus
+                        />
+                      </div>
+                      <div>
+                        <label className="mb-1.5 block text-sm text-brand-white/60">WhatsApp</label>
+                        <input
+                          type="tel"
+                          value={form.telefone}
+                          onChange={(e) => update("telefone", phoneMask(e.target.value))}
+                          placeholder="(00) 00000-0000"
+                          className="w-full rounded-lg border border-brand-teal/30 bg-brand-dark px-4 py-3 text-brand-white placeholder-brand-white/30 outline-none transition-colors focus:border-brand-yellow"
+                        />
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+
+                {step === 2 && (
+                  <motion.div
+                    key="step2"
+                    variants={slideVariants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    transition={{ duration: 0.25 }}
+                  >
+                    <p className="text-sm font-medium text-brand-yellow">Passo 2 de {totalSteps}</p>
+                    <h3 className="mt-2 text-xl font-bold text-brand-white">Qual a sua empresa?</h3>
+                    <div className="mt-6">
+                      <label className="mb-1.5 block text-sm text-brand-white/60">Nome da empresa</label>
+                      <input
+                        type="text"
+                        value={form.empresa}
+                        onChange={(e) => update("empresa", e.target.value)}
+                        placeholder="Ex: Loja do João Materiais"
+                        className="w-full rounded-lg border border-brand-teal/30 bg-brand-dark px-4 py-3 text-brand-white placeholder-brand-white/30 outline-none transition-colors focus:border-brand-yellow"
+                        autoFocus
+                      />
+                    </div>
+                  </motion.div>
+                )}
+
+                {step === 3 && (
+                  <motion.div
+                    key="step3"
+                    variants={slideVariants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    transition={{ duration: 0.25 }}
+                  >
+                    <p className="text-sm font-medium text-brand-yellow">Passo 3 de {totalSteps}</p>
+                    <h3 className="mt-2 text-xl font-bold text-brand-white">Já vende no Mercado Livre?</h3>
+                    <div className="mt-6 grid grid-cols-2 gap-3">
+                      {[
+                        { value: "sim", label: "Sim, já vendo" },
+                        { value: "nao", label: "Ainda não" },
+                      ].map((opt) => (
+                        <button
+                          key={opt.value}
+                          type="button"
+                          onClick={() => update("vendeML", opt.value)}
+                          className={`rounded-lg border px-4 py-4 text-center font-semibold transition-all ${
+                            form.vendeML === opt.value
+                              ? "border-brand-yellow bg-brand-yellow/10 text-brand-yellow"
+                              : "border-brand-teal/30 text-brand-white/60 hover:border-brand-white/30"
+                          }`}
+                        >
+                          {opt.label}
+                        </button>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+
+                {step === 4 && (
+                  <motion.div
+                    key="step4"
+                    variants={slideVariants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    transition={{ duration: 0.25 }}
+                  >
+                    <p className="text-sm font-medium text-brand-yellow">Passo 4 de {totalSteps}</p>
+                    <h3 className="mt-2 text-xl font-bold text-brand-white">Qual seu faturamento mensal no ML?</h3>
+                    <div className="mt-6 space-y-2">
+                      {[
+                        { value: "ate-20k", label: "Até R$20 mil/mês" },
+                        { value: "20k-50k", label: "R$20 mil a R$50 mil/mês" },
+                        { value: "50k-100k", label: "R$50 mil a R$100 mil/mês" },
+                        { value: "100k-300k", label: "R$100 mil a R$300 mil/mês" },
+                        { value: "acima-300k", label: "Acima de R$300 mil/mês" },
+                      ].map((opt) => (
+                        <button
+                          key={opt.value}
+                          type="button"
+                          onClick={() => update("faturamento", opt.value)}
+                          className={`w-full rounded-lg border px-4 py-3 text-left font-medium transition-all ${
+                            form.faturamento === opt.value
+                              ? "border-brand-yellow bg-brand-yellow/10 text-brand-yellow"
+                              : "border-brand-teal/30 text-brand-white/60 hover:border-brand-white/30"
+                          }`}
+                        >
+                          {opt.label}
+                        </button>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Navigation */}
+              <div className="mt-8 flex items-center justify-between">
+                {step > 1 ? (
+                  <button
+                    type="button"
+                    onClick={() => setStep((s) => s - 1)}
+                    className="text-sm font-medium text-brand-white/50 transition-colors hover:text-brand-white"
+                  >
+                    Voltar
+                  </button>
+                ) : (
+                  <span />
+                )}
+                <button
+                  type="button"
+                  onClick={next}
+                  disabled={!canAdvance() || sending}
+                  className="rounded-lg bg-brand-yellow px-6 py-3 font-bold text-brand-dark transition-all hover:bg-brand-yellow-hover disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  {sending
+                    ? "Enviando..."
+                    : step === totalSteps || (step === 3 && form.vendeML === "nao")
+                      ? "Enviar"
+                      : "Continuar"}
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      </motion.div>
+    </motion.div>
   );
 }
 
@@ -106,8 +408,15 @@ function FAQItem({
 }
 
 export default function Home() {
+  const [showForm, setShowForm] = useState(false);
+  const openForm = () => setShowForm(true);
+
   return (
     <main className="overflow-x-hidden">
+      {/* Lead Form Modal */}
+      <AnimatePresence>
+        {showForm && <LeadFormModal onClose={() => setShowForm(false)} />}
+      </AnimatePresence>
       {/* NAV */}
       <nav className="fixed top-0 z-50 w-full border-b border-brand-teal/20 bg-brand-darker/90 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4 md:px-12 lg:px-20">
@@ -118,12 +427,12 @@ export default function Home() {
             height={48}
             className="h-8 w-auto sm:h-10"
           />
-          <a
-            href={CTA_URL}
-            className="hidden rounded-lg bg-brand-yellow px-5 py-2.5 text-sm font-bold text-brand-dark transition-colors hover:bg-brand-yellow-hover sm:inline-flex"
+          <button
+            onClick={openForm}
+            className="hidden rounded-lg bg-brand-yellow px-5 py-2.5 text-sm font-bold text-brand-dark transition-colors hover:bg-brand-yellow-hover sm:inline-flex cursor-pointer"
           >
             Conhecer o Método
-          </a>
+          </button>
         </div>
       </nav>
 
@@ -156,7 +465,7 @@ export default function Home() {
             lucro por produto — não em faturamento de vaidade.
           </motion.p>
           <motion.div variants={fadeUp} className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-            <CTAButton />
+            <CTAButton onClick={openForm} />
             <span className="text-sm text-brand-white/50">
               30 min · Sem compromisso · Sem enrolação
             </span>
@@ -427,7 +736,7 @@ export default function Home() {
         </div>
 
         <motion.div variants={fadeUp} className="mt-14 text-center">
-          <CTAButton />
+          <CTAButton onClick={openForm} />
           <p className="mt-4 text-sm text-brand-white/50">
             Vamos analisar juntos qual fase faz sentido para a sua operação.
           </p>
@@ -657,7 +966,7 @@ export default function Home() {
             30 minutos. Sem compromisso. Sem enrolação.
           </motion.p>
           <motion.div variants={fadeUp} className="mt-8">
-            <CTAButton />
+            <CTAButton onClick={openForm} />
             <p className="mt-4 text-sm text-brand-white/40">
               Escolha o melhor horário na próxima tela. Respondemos em até 24h.
             </p>
