@@ -19,6 +19,14 @@ import {
   Target,
   ChevronDown,
   ArrowRight,
+  Check,
+  X,
+  User,
+  Phone,
+  Building2,
+  ShoppingCart,
+  TrendingUp,
+  Sparkles,
 } from "lucide-react";
 import { useState, useCallback, useEffect, useRef } from "react";
 import { AnimatePresence, useScroll, useSpring, useMotionValue, useTransform, useInView } from "framer-motion";
@@ -135,6 +143,45 @@ function MarqueeLogos() {
   );
 }
 
+/* ============================================================
+   STICKY MOBILE CTA — appears after scrolling past hero
+   ============================================================ */
+function StickyMobileCTA({ onClick }: { onClick: () => void }) {
+  const { scrollY } = useScroll();
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = scrollY.on("change", (y) => {
+      setVisible(y > 600);
+    });
+    return unsubscribe;
+  }, [scrollY]);
+
+  return (
+    <AnimatePresence>
+      {visible && (
+        <motion.div
+          initial={{ y: 100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: 100, opacity: 0 }}
+          transition={{ type: "spring", stiffness: 300, damping: 25 }}
+          className="fixed bottom-0 left-0 right-0 z-50 border-t border-brand-teal/20 bg-brand-darker/95 px-4 py-3 backdrop-blur-lg sm:hidden"
+        >
+          <motion.button
+            onClick={onClick}
+            whileTap={{ scale: 0.97 }}
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-yellow py-3.5 text-sm font-bold text-brand-dark shadow-[0_0_20px_rgba(252,227,0,0.2)]"
+          >
+            <Sparkles className="h-4 w-4" />
+            Conhecer o Método
+            <ArrowRight className="h-4 w-4" />
+          </motion.button>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
 function SectionWrapper({
   children,
   className = "",
@@ -177,12 +224,180 @@ function CTAButton({ className = "", onClick }: { className?: string; onClick?: 
 }
 
 /* ============================================================
+   CONFETTI PARTICLES
+   ============================================================ */
+function ConfettiParticles() {
+  const particles = Array.from({ length: 24 }, (_, i) => ({
+    id: i,
+    x: Math.random() * 100,
+    delay: Math.random() * 0.5,
+    duration: 1.5 + Math.random() * 1.5,
+    size: 4 + Math.random() * 6,
+    color: ["#FCE300", "#fff", "#3a7a8f", "#FCE300", "#e5cd00"][Math.floor(Math.random() * 5)],
+  }));
+
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      {particles.map((p) => (
+        <motion.div
+          key={p.id}
+          initial={{ y: -10, x: `${p.x}%`, opacity: 1, scale: 1, rotate: 0 }}
+          animate={{ y: "120%", opacity: 0, scale: 0.5, rotate: 360 + Math.random() * 360 }}
+          transition={{ duration: p.duration, delay: p.delay, ease: "easeOut" }}
+          className="absolute"
+          style={{ width: p.size, height: p.size, backgroundColor: p.color, borderRadius: Math.random() > 0.5 ? "50%" : "2px" }}
+        />
+      ))}
+    </div>
+  );
+}
+
+/* ============================================================
+   ANIMATED SVG CHECKMARK
+   ============================================================ */
+function AnimatedCheck() {
+  return (
+    <motion.div
+      initial={{ scale: 0 }}
+      animate={{ scale: 1 }}
+      transition={{ type: "spring", stiffness: 200, damping: 12, delay: 0.2 }}
+      className="relative mx-auto mb-5 flex h-20 w-20 items-center justify-center"
+    >
+      <motion.div
+        initial={{ scale: 0 }}
+        animate={{ scale: [0, 1.2, 1] }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+        className="absolute inset-0 rounded-full bg-brand-yellow/20"
+      />
+      <motion.div
+        initial={{ scale: 0 }}
+        animate={{ scale: [0, 1.4, 0] }}
+        transition={{ duration: 0.8, delay: 0.2 }}
+        className="absolute inset-0 rounded-full bg-brand-yellow/10"
+      />
+      <motion.svg
+        width="36"
+        height="36"
+        viewBox="0 0 24 24"
+        fill="none"
+        className="relative z-10"
+      >
+        <motion.path
+          d="M20 6L9 17l-5-5"
+          stroke="#FCE300"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ duration: 0.5, delay: 0.4, ease: "easeOut" }}
+        />
+      </motion.svg>
+    </motion.div>
+  );
+}
+
+/* ============================================================
+   STEP ICON INDICATOR
+   ============================================================ */
+const stepIcons = [User, Phone, Building2, ShoppingCart, TrendingUp];
+
+function StepIndicator({ currentStep, totalSteps }: { currentStep: number; totalSteps: number }) {
+  return (
+    <div className="mb-6 flex items-center justify-center gap-2">
+      {Array.from({ length: totalSteps }, (_, i) => {
+        const stepNum = i + 1;
+        const isActive = stepNum === currentStep;
+        const isDone = stepNum < currentStep;
+        return (
+          <motion.div
+            key={i}
+            animate={{
+              scale: isActive ? 1 : 0.85,
+              backgroundColor: isDone ? "rgba(252,227,0,0.2)" : isActive ? "rgba(252,227,0,0.15)" : "rgba(37,55,70,1)",
+            }}
+            className="flex h-9 w-9 items-center justify-center rounded-full border transition-colors"
+            style={{ borderColor: isDone || isActive ? "rgba(252,227,0,0.4)" : "rgba(43,91,108,0.3)" }}
+          >
+            {isDone ? (
+              <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 300 }}>
+                <Check className="h-4 w-4 text-brand-yellow" />
+              </motion.div>
+            ) : (
+              <span className={`text-xs font-bold ${isActive ? "text-brand-yellow" : "text-brand-white/30"}`}>{stepNum}</span>
+            )}
+          </motion.div>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ============================================================
+   FLOATING INPUT LABEL
+   ============================================================ */
+function FloatingInput({
+  label,
+  icon: Icon,
+  value,
+  onChange,
+  placeholder,
+  type = "text",
+  autoFocus = false,
+}: {
+  label: string;
+  icon: React.ElementType;
+  value: string;
+  onChange: (val: string) => void;
+  placeholder: string;
+  type?: string;
+  autoFocus?: boolean;
+}) {
+  const [focused, setFocused] = useState(false);
+  const active = focused || value.length > 0;
+
+  return (
+    <div className="group relative">
+      <div className={`pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 transition-all duration-200 ${active ? "-translate-y-[26px] text-[11px]" : "text-sm"} ${focused ? "text-brand-yellow" : "text-brand-white/40"}`}>
+        {label}
+      </div>
+      <div className={`absolute left-4 top-1/2 -translate-y-1/2 transition-all duration-200 ${active ? "opacity-0 scale-75" : "opacity-100"}`}>
+      </div>
+      <motion.div
+        animate={{ borderColor: focused ? "rgba(252,227,0,0.6)" : "rgba(43,91,108,0.3)" }}
+        className="relative flex items-center overflow-hidden rounded-xl border bg-brand-dark transition-shadow"
+        style={{ boxShadow: focused ? "0 0 16px rgba(252,227,0,0.1)" : "none" }}
+      >
+        <div className={`flex h-full items-center pl-4 transition-colors ${focused ? "text-brand-yellow" : "text-brand-white/30"}`}>
+          <Icon className="h-4 w-4" />
+        </div>
+        <input
+          type={type}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+          placeholder={active ? placeholder : ""}
+          autoFocus={autoFocus}
+          className="w-full bg-transparent px-3 pb-2 pt-5 text-brand-white placeholder-brand-white/25 outline-none"
+        />
+        {value.length > 0 && (
+          <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="pr-3">
+            <Check className="h-4 w-4 text-brand-yellow/60" />
+          </motion.div>
+        )}
+      </motion.div>
+    </div>
+  );
+}
+
+/* ============================================================
    MULTI-STEP LEAD FORM MODAL
    ============================================================ */
 const slideVariants = {
-  enter: { x: 40, opacity: 0 },
-  center: { x: 0, opacity: 1 },
-  exit: { x: -40, opacity: 0 },
+  enter: { x: 40, opacity: 0, filter: "blur(4px)" },
+  center: { x: 0, opacity: 1, filter: "blur(0px)" },
+  exit: { x: -40, opacity: 0, filter: "blur(4px)" },
 };
 
 function LeadFormModal({ onClose }: { onClose: () => void }) {
@@ -257,58 +472,88 @@ function LeadFormModal({ onClose }: { onClose: () => void }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[100] flex items-end justify-center bg-black/60 backdrop-blur-sm sm:items-center sm:px-4"
+      className="fixed inset-0 z-[100] flex items-end justify-center bg-black/70 backdrop-blur-md sm:items-center sm:px-4"
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
       <motion.div
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.9, opacity: 0 }}
-        transition={{ type: "spring", damping: 25, stiffness: 300 }}
-        className="relative w-full max-w-md overflow-hidden rounded-none border-0 bg-brand-darker shadow-2xl sm:rounded-2xl sm:border sm:border-brand-teal/20 max-h-[100dvh] sm:max-h-[90vh] overflow-y-auto"
+        initial={{ y: 100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        exit={{ y: 100, opacity: 0 }}
+        transition={{ type: "spring", damping: 28, stiffness: 300 }}
+        className="relative w-full max-w-md overflow-hidden rounded-t-3xl border-0 bg-brand-darker shadow-[0_-10px_60px_rgba(0,0,0,0.5)] sm:rounded-2xl sm:border sm:border-brand-teal/20 sm:shadow-[0_20px_60px_rgba(0,0,0,0.5)] max-h-[95dvh] sm:max-h-[90vh] overflow-y-auto"
       >
-        {/* Close button */}
-        <button
-          onClick={onClose}
-          className="absolute right-4 top-4 text-brand-white/40 transition-colors hover:text-brand-white"
-        >
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M15 5L5 15M5 5l10 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
-        </button>
+        {/* Decorative top glow */}
+        <div className="pointer-events-none absolute -top-20 left-1/2 h-40 w-40 -translate-x-1/2 rounded-full bg-brand-yellow/10 blur-3xl" />
 
-        {/* Progress bar */}
+        {/* Close button */}
+        <motion.button
+          onClick={onClose}
+          whileHover={{ scale: 1.1, backgroundColor: "rgba(43,91,108,0.3)" }}
+          whileTap={{ scale: 0.9 }}
+          className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full text-brand-white/40 transition-colors hover:text-brand-white"
+        >
+          <X className="h-4 w-4" />
+        </motion.button>
+
+        {/* Drag handle — mobile */}
+        <div className="flex justify-center pt-3 sm:hidden">
+          <div className="h-1 w-10 rounded-full bg-brand-white/20" />
+        </div>
+
+        {/* Progress bar with glow */}
         {!sent && (
-          <div className="h-1 bg-brand-dark">
+          <div className="mx-6 mt-4 h-1 overflow-hidden rounded-full bg-brand-dark sm:mx-8">
             <motion.div
-              className="h-full bg-brand-yellow"
+              className="h-full rounded-full bg-brand-yellow shadow-[0_0_8px_rgba(252,227,0,0.4)]"
               animate={{ width: `${(step / totalSteps) * 100}%` }}
-              transition={{ duration: 0.3 }}
+              transition={{ type: "spring", stiffness: 200, damping: 20 }}
             />
           </div>
         )}
 
-        <div className="p-8">
+        <div className="p-6 pt-4 sm:p-8 sm:pt-5">
           {sent ? (
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="py-6 text-center"
+              className="relative py-6 text-center"
             >
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-brand-yellow/20">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#FCE300" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-              </div>
-              <h3 className="text-2xl font-bold text-brand-white">Recebemos seus dados!</h3>
-              <p className="mt-3 text-brand-white/60">
-                Nossa equipe vai entrar em contato pelo WhatsApp em até 24h para agendar sua conversa.
-              </p>
-              <button
-                onClick={onClose}
-                className="mt-6 rounded-lg bg-brand-yellow px-6 py-3 font-bold text-brand-dark transition-colors hover:bg-brand-yellow-hover"
+              <ConfettiParticles />
+              <AnimatedCheck />
+              <motion.h3
+                initial={{ y: 10, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.5 }}
+                className="text-2xl font-bold text-brand-white"
               >
-                Fechar
-              </button>
+                Recebemos seus dados!
+              </motion.h3>
+              <motion.p
+                initial={{ y: 10, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.65 }}
+                className="mt-3 text-brand-white/60"
+              >
+                Nossa equipe vai entrar em contato pelo WhatsApp em até 24h para agendar sua conversa.
+              </motion.p>
+              <motion.div
+                initial={{ y: 10, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.8 }}
+              >
+                <motion.button
+                  onClick={onClose}
+                  whileHover={{ scale: 1.04, boxShadow: "0 0 20px rgba(252,227,0,0.3)" }}
+                  whileTap={{ scale: 0.96 }}
+                  className="mt-6 rounded-xl bg-brand-yellow px-8 py-3 font-bold text-brand-dark shadow-[0_0_16px_rgba(252,227,0,0.15)] transition-colors hover:bg-brand-yellow-hover"
+                >
+                  Fechar
+                </motion.button>
+              </motion.div>
             </motion.div>
           ) : (
             <>
+              <StepIndicator currentStep={step} totalSteps={totalSteps} />
               <AnimatePresence mode="wait">
                 {step === 1 && (
                   <motion.div
@@ -317,32 +562,27 @@ function LeadFormModal({ onClose }: { onClose: () => void }) {
                     initial="enter"
                     animate="center"
                     exit="exit"
-                    transition={{ duration: 0.25 }}
+                    transition={{ duration: 0.3 }}
                   >
-                    <p className="text-sm font-medium text-brand-yellow">Passo 1 de {totalSteps}</p>
-                    <h3 className="mt-2 text-xl font-bold text-brand-white">Como podemos te chamar?</h3>
+                    <h3 className="text-center text-xl font-bold text-brand-white">Como podemos te chamar?</h3>
+                    <p className="mt-1 text-center text-sm text-brand-white/40">Preencha para continuarmos</p>
                     <div className="mt-6 space-y-4">
-                      <div>
-                        <label className="mb-1.5 block text-sm text-brand-white/60">Seu nome</label>
-                        <input
-                          type="text"
-                          value={form.nome}
-                          onChange={(e) => update("nome", e.target.value)}
-                          placeholder="Ex: João Silva"
-                          className="w-full rounded-lg border border-brand-teal/30 bg-brand-dark px-4 py-3 text-brand-white placeholder-brand-white/30 outline-none transition-colors focus:border-brand-yellow"
-                          autoFocus
-                        />
-                      </div>
-                      <div>
-                        <label className="mb-1.5 block text-sm text-brand-white/60">WhatsApp</label>
-                        <input
-                          type="tel"
-                          value={form.telefone}
-                          onChange={(e) => update("telefone", phoneMask(e.target.value))}
-                          placeholder="(00) 00000-0000"
-                          className="w-full rounded-lg border border-brand-teal/30 bg-brand-dark px-4 py-3 text-brand-white placeholder-brand-white/30 outline-none transition-colors focus:border-brand-yellow"
-                        />
-                      </div>
+                      <FloatingInput
+                        label="Seu nome"
+                        icon={User}
+                        value={form.nome}
+                        onChange={(v) => update("nome", v)}
+                        placeholder="Ex: João Silva"
+                        autoFocus
+                      />
+                      <FloatingInput
+                        label="WhatsApp"
+                        icon={Phone}
+                        value={form.telefone}
+                        onChange={(v) => update("telefone", phoneMask(v))}
+                        placeholder="(00) 00000-0000"
+                        type="tel"
+                      />
                     </div>
                   </motion.div>
                 )}
@@ -354,18 +594,17 @@ function LeadFormModal({ onClose }: { onClose: () => void }) {
                     initial="enter"
                     animate="center"
                     exit="exit"
-                    transition={{ duration: 0.25 }}
+                    transition={{ duration: 0.3 }}
                   >
-                    <p className="text-sm font-medium text-brand-yellow">Passo 2 de {totalSteps}</p>
-                    <h3 className="mt-2 text-xl font-bold text-brand-white">Qual a sua empresa?</h3>
+                    <h3 className="text-center text-xl font-bold text-brand-white">Qual a sua empresa?</h3>
+                    <p className="mt-1 text-center text-sm text-brand-white/40">Para personalizarmos sua análise</p>
                     <div className="mt-6">
-                      <label className="mb-1.5 block text-sm text-brand-white/60">Nome da empresa</label>
-                      <input
-                        type="text"
+                      <FloatingInput
+                        label="Nome da empresa"
+                        icon={Building2}
                         value={form.empresa}
-                        onChange={(e) => update("empresa", e.target.value)}
+                        onChange={(v) => update("empresa", v)}
                         placeholder="Ex: Loja do João Materiais"
-                        className="w-full rounded-lg border border-brand-teal/30 bg-brand-dark px-4 py-3 text-brand-white placeholder-brand-white/30 outline-none transition-colors focus:border-brand-yellow"
                         autoFocus
                       />
                     </div>
@@ -379,27 +618,41 @@ function LeadFormModal({ onClose }: { onClose: () => void }) {
                     initial="enter"
                     animate="center"
                     exit="exit"
-                    transition={{ duration: 0.25 }}
+                    transition={{ duration: 0.3 }}
                   >
-                    <p className="text-sm font-medium text-brand-yellow">Passo 3 de {totalSteps}</p>
-                    <h3 className="mt-2 text-xl font-bold text-brand-white">Já vende no Mercado Livre?</h3>
+                    <h3 className="text-center text-xl font-bold text-brand-white">Já vende no Mercado Livre?</h3>
+                    <p className="mt-1 text-center text-sm text-brand-white/40">Isso define seu ponto de partida</p>
                     <div className="mt-6 grid grid-cols-2 gap-3">
                       {[
-                        { value: "sim", label: "Sim, já vendo" },
-                        { value: "nao", label: "Ainda não" },
+                        { value: "sim", label: "Sim, já vendo", icon: ShoppingCart },
+                        { value: "nao", label: "Ainda não", icon: Rocket },
                       ].map((opt) => (
-                        <button
+                        <motion.button
                           key={opt.value}
                           type="button"
                           onClick={() => update("vendeML", opt.value)}
-                          className={`rounded-lg border px-4 py-4 text-center font-semibold transition-all ${
+                          whileHover={{ scale: 1.03 }}
+                          whileTap={{ scale: 0.97 }}
+                          className={`relative overflow-hidden rounded-xl border px-4 py-5 text-center font-semibold transition-all ${
                             form.vendeML === opt.value
-                              ? "border-brand-yellow bg-brand-yellow/10 text-brand-yellow"
+                              ? "border-brand-yellow bg-brand-yellow/10 text-brand-yellow shadow-[0_0_16px_rgba(252,227,0,0.1)]"
                               : "border-brand-teal/30 text-brand-white/60 hover:border-brand-white/30"
                           }`}
                         >
+                          {form.vendeML === opt.value && (
+                            <motion.div
+                              layoutId="selectedCheck"
+                              className="absolute right-2 top-2"
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              transition={{ type: "spring", stiffness: 400 }}
+                            >
+                              <Check className="h-3.5 w-3.5 text-brand-yellow" />
+                            </motion.div>
+                          )}
+                          <opt.icon className={`mx-auto mb-2 h-6 w-6 ${form.vendeML === opt.value ? "text-brand-yellow" : "text-brand-white/30"}`} />
                           {opt.label}
-                        </button>
+                        </motion.button>
                       ))}
                     </div>
                   </motion.div>
@@ -412,10 +665,10 @@ function LeadFormModal({ onClose }: { onClose: () => void }) {
                     initial="enter"
                     animate="center"
                     exit="exit"
-                    transition={{ duration: 0.25 }}
+                    transition={{ duration: 0.3 }}
                   >
-                    <p className="text-sm font-medium text-brand-yellow">Passo 4 de {totalSteps}</p>
-                    <h3 className="mt-2 text-xl font-bold text-brand-white">Qual seu faturamento mensal no ML?</h3>
+                    <h3 className="text-center text-xl font-bold text-brand-white">Qual seu faturamento mensal no ML?</h3>
+                    <p className="mt-1 text-center text-sm text-brand-white/40">Selecione a faixa mais próxima</p>
                     <div className="mt-6 space-y-2">
                       {[
                         { value: "ate-20k", label: "Até R$20 mil/mês" },
@@ -424,18 +677,27 @@ function LeadFormModal({ onClose }: { onClose: () => void }) {
                         { value: "100k-300k", label: "R$100 mil a R$300 mil/mês" },
                         { value: "acima-300k", label: "Acima de R$300 mil/mês" },
                       ].map((opt) => (
-                        <button
+                        <motion.button
                           key={opt.value}
                           type="button"
                           onClick={() => update("faturamento", opt.value)}
-                          className={`w-full rounded-lg border px-4 py-3 text-left font-medium transition-all ${
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          className={`relative w-full overflow-hidden rounded-xl border px-4 py-3.5 text-left font-medium transition-all ${
                             form.faturamento === opt.value
-                              ? "border-brand-yellow bg-brand-yellow/10 text-brand-yellow"
+                              ? "border-brand-yellow bg-brand-yellow/10 text-brand-yellow shadow-[0_0_12px_rgba(252,227,0,0.08)]"
                               : "border-brand-teal/30 text-brand-white/60 hover:border-brand-white/30"
                           }`}
                         >
-                          {opt.label}
-                        </button>
+                          <span className="flex items-center justify-between">
+                            {opt.label}
+                            {form.faturamento === opt.value && (
+                              <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 400 }}>
+                                <Check className="h-4 w-4 text-brand-yellow" />
+                              </motion.div>
+                            )}
+                          </span>
+                        </motion.button>
                       ))}
                     </div>
                   </motion.div>
@@ -443,15 +705,18 @@ function LeadFormModal({ onClose }: { onClose: () => void }) {
               </AnimatePresence>
 
               {/* Navigation */}
-              <div className="mt-8 flex items-center justify-between">
+              <div className="mt-8 flex items-center justify-between gap-3">
                 {step > 1 ? (
-                  <button
+                  <motion.button
                     type="button"
                     onClick={() => setStep((s) => s - 1)}
-                    className="text-sm font-medium text-brand-white/50 transition-colors hover:text-brand-white"
+                    whileHover={{ x: -2 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="flex items-center gap-1.5 rounded-xl px-4 py-3 text-sm font-medium text-brand-white/50 transition-colors hover:bg-brand-teal/10 hover:text-brand-white"
                   >
+                    <ArrowRight className="h-3.5 w-3.5 rotate-180" />
                     Voltar
-                  </button>
+                  </motion.button>
                 ) : (
                   <span />
                 )}
@@ -462,13 +727,26 @@ function LeadFormModal({ onClose }: { onClose: () => void }) {
                   whileHover={canAdvance() && !sending ? { scale: 1.04, boxShadow: "0 0 24px rgba(252,227,0,0.3)" } : {}}
                   whileTap={canAdvance() && !sending ? { scale: 0.96 } : {}}
                   transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                  className="rounded-xl bg-brand-yellow px-6 py-3 font-bold text-brand-dark shadow-[0_0_12px_rgba(252,227,0,0.1)] transition-all hover:bg-brand-yellow-hover disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none"
+                  className="group relative flex items-center gap-2 overflow-hidden rounded-xl bg-brand-yellow px-6 py-3 font-bold text-brand-dark shadow-[0_0_12px_rgba(252,227,0,0.1)] transition-all hover:bg-brand-yellow-hover disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none"
                 >
-                  {sending
-                    ? "Enviando..."
-                    : step === totalSteps || (step === 3 && form.vendeML === "nao")
-                      ? "Enviar"
-                      : "Continuar"}
+                  <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
+                  <span className="relative">
+                    {sending
+                      ? "Enviando..."
+                      : step === totalSteps || (step === 3 && form.vendeML === "nao")
+                        ? "Enviar"
+                        : "Continuar"}
+                  </span>
+                  {!sending && (
+                    <ArrowRight className="relative h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                  )}
+                  {sending && (
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                      className="relative h-4 w-4 rounded-full border-2 border-brand-dark/30 border-t-brand-dark"
+                    />
+                  )}
                 </motion.button>
               </div>
             </>
@@ -524,8 +802,9 @@ export default function Home() {
   const openForm = () => setShowForm(true);
 
   return (
-    <main className="overflow-x-hidden">
+    <main className="overflow-x-hidden pb-16 sm:pb-0">
       <ScrollProgress />
+      <StickyMobileCTA onClick={openForm} />
       {/* Lead Form Modal */}
       <AnimatePresence>
         {showForm && <LeadFormModal onClose={() => setShowForm(false)} />}
@@ -1024,7 +1303,12 @@ export default function Home() {
                 <th className="p-5 font-semibold text-brand-white/50" />
                 <th className="p-5 font-semibold text-brand-white/50">Sozinho</th>
                 <th className="p-5 font-semibold text-brand-white/50">Consultoria genérica</th>
-                <th className="p-5 font-semibold text-brand-yellow">PERFORMAKON</th>
+                <th className="p-5">
+                  <span className="inline-flex items-center gap-2 rounded-full bg-brand-yellow/10 px-3 py-1 text-sm font-bold text-brand-yellow">
+                    <Sparkles className="h-3.5 w-3.5" />
+                    PERFORMAKON
+                  </span>
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-brand-teal/10">

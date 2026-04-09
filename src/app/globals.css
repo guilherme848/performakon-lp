@@ -84,3 +84,27 @@ body {
 .animate-float-slow-delay-2 {
   animation: float-slow 12s ease-in-out 4s infinite;
 }
+
+/* Animated gradient border for CTA card */
+@keyframes border-glow {
+  0%, 100% { border-color: rgba(252, 227, 0, 0.15); }
+  50% { border-color: rgba(252, 227, 0, 0.35); }
+}
+
+.animate-border-glow {
+  animation: border-glow 3s ease-in-out infinite;
+}
+
+/* Smooth entrance for mobile sticky bar */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .safe-bottom {
+    padding-bottom: calc(0.75rem + env(safe-area-inset-bottom));
+  }
+}
+
+/* Better tap targets on mobile */
+@media (max-width: 639px) {
+  button, [role="button"] {
+    min-height: 44px;
+  }
+}
